@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>CssTYPE</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link href='http://fonts.googleapis.com/css?family=Dancing+Script' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+</head>
+
+
+<body>
+	<div id="container">
+		<div id="header">
+			<span id="header-text-left">
+				<p>For exporting and sharing<br>copy <a href="#">this worksheet LINK</a></p>
+			</span>
+			<span id="header-logo">
+				<h1 id="text-Css">Css</h1><h1 id="text-TYPE">TYPE</h1>
+			</span>
+			<span id="header-text-right">
+				<p>Ctrl+N - Create new worksheet<br>Ctrl+G - Add new Graphic block<br>Ctrl+D - Toggle deisgn mode</p>
+			</span>
+		</div>
+		 
+		<div id="workbench">
+			<button id="btn-newGraphBlock" type="button" onclick="newGraphBlock()">G</button>
+
+			<div class="ui-widget-content graphic-block" >
+				<p contenteditable="true">Lorem ipsum dolor sit amet</p>
+			</div>
+
+		</div>
+	</div>
+</body>
+
+<script src="js/script.js"></script>
+
+</html> 

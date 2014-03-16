@@ -2,16 +2,19 @@ body { /*font-size: 62.5%;  /* 16px × 62.5% = 10px */ }
 
 #container {
 	margin: 0 auto;
-	width: 70%;
-	
+	width: 70%;	
 }
 
-#workbench {
+#workarea {
+	margin-top: 0.5em;
+}
+
+.workbench {
 	clear:left;
 	margin-top: 0.5em;
 	height: 600px;
-	border-style: solid;
-	border-width: thin;
+	border-style: solid!important;
+	border-width: thin!important;
 }
 
 .graphic-block { 
@@ -76,27 +79,49 @@ body { /*font-size: 62.5%;  /* 16px × 62.5% = 10px */ }
 	font-family: Arial, Helvetica, sans-serif; 
 	border-radius: 0.3em; 
 	border: thin solid #000000;
+	cursor: pointer;
+}
+
+#li-newTab {
+	text-align: right;
 }
 
 .graphBlock {
 	background-color: #999fff;
 	color: blue;
-	position: relative;
+	position: absolute;
 }
 
 #initial-instructions {
+	font-family: Arial, Helvetica, sans-serif;
 	text-align: center;
 	color: #5e5858;
-	
 }
 
 #text-instructions-1 {
 	font-size: 0.8em;
-	font-family: Arial, Helvetica, sans-serif;
 }
 
 #text-instructions-2 {
 	font-size: 0.6em;
-	font-family: Arial, Helvetica, sans-serif;
+}
+
+.graphBlock-content {
+}
+
+.graphBlock-handle {
+	position: absolute;
+    left: -0.55em;
+    background-color: #FFF; 
+    color: #000;
+    width: 0.5em;
+    height: 0.7em;
+    cursor: move;
+    border-left: 1px solid #000;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+    border-radius: 3px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 

@@ -4,8 +4,8 @@ $( document ).ready(function() {
 
 function newGraphBlock() {
 	var newGraphBlock = document.createElement("span");
-	newGraphBlock.className = "graphBlock"; 
-	
+	newGraphBlock.className = "graphBlock " + currentTab + "-blocks";
+		
 	var newGraphBlockHandle = document.createElement("span");
 	newGraphBlockHandle.className = "graphBlock-handle";
 	newGraphBlock.appendChild(newGraphBlockHandle);
@@ -21,8 +21,11 @@ function newGraphBlock() {
 	$( "#initial-instructions" ).remove();
 }
 
-function makeDraggable() {
-	$( ".graphBlock" ).draggable({ containment: currentTab, scroll: false, stack: ".graphBlock", handle: ".graphBlock-handle" }).resizable();
+function makeDraggable(tabID) {
+	if (tabID === undefined) {
+		tabID = currentTab;
+	}
+	$( "." + tabID + "-blocks" ).draggable({ containment: "#" + tabID, scroll: false, stack: ".graphBlock", handle: ".graphBlock-handle" }).resizable();
 }
 
 /* ===Tabs=== */
@@ -52,6 +55,18 @@ function addNewTab() {
 	tabs.append( "<div id='" + id + "' class='workbench'></div>" );
 	tabs.tabs( "refresh" );
 	tabCounter++;
+}
+
+function copyCurrentTab() {
+	var id = "workbench-" + tabCounter,
+	li = "<li><a href='#" + id + "'>" + tabCounter + "</a></li>";
+	tabs.find( ".ui-tabs-nav" ).append( li );
+	tabs.append( "<div id='" + id + "' class='workbench'></div>" );
+	tabs.tabs( "refresh" );
+	tabCounter++;
+	$('#' + id).html($('#' + currentTab).html());
+	$( "div#" + id ).children().removeClass( currentTab + "-blocks" ).addClass(id + "-blocks");
+	makeDraggable(id);
 }
 
 /* ========= */

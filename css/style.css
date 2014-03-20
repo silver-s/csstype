@@ -106,9 +106,6 @@ body { /*font-size: 62.5%;  /* 16px × 62.5% = 10px */ }
 	font-size: 0.6em;
 }
 
-.graphBlock-content {
-}
-
 .graphBlock-handle {
 	position: absolute;
     left: -0.55em;

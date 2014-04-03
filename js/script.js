@@ -1,6 +1,26 @@
 $( document ).ready(function() {
 	makeDraggable();
+	//$( ".graphBlock-content" ).resizable().draggable();
 });
+
+/* Later perhaps
+var webSafeFonts = new Array(
+	"Arial",
+	"Comic Sans",
+	"Courier New",
+	"Times New Roman",
+	"Impact",
+	"Georgia",
+	"Trebuchet",
+	"Webdings",
+	"Verdana"
+);
+
+var googleFonts = new Array(
+	"Dancing Script"
+);
+*/
+
 
 function newGraphBlock() {
 	var newGraphBlock = document.createElement("span");
@@ -16,16 +36,19 @@ function newGraphBlock() {
 	newGraphBlockContent.setAttribute("contenteditable", "true");
 	newGraphBlock.appendChild(newGraphBlockContent);
 
+	$( "#toolbox" ).clone().appendTo( newGraphBlock );
 	document.getElementById(currentTab).appendChild(newGraphBlock);
+	$( "." + currentTab + "-blocks" ).children().removeClass("hidden");
 	makeDraggable();
 	$( "#initial-instructions" ).remove();
+
 }
 
-function makeDraggable(tabID) {
-	if (tabID === undefined) {
-		tabID = currentTab;
+function makeDraggable(tabId) {
+	if (tabId === undefined) {
+		tabId = currentTab;
 	}
-	$( "." + tabID + "-blocks" ).draggable({ containment: "#" + tabID, scroll: false, stack: ".graphBlock", handle: ".graphBlock-handle" }).resizable();
+	$( "." + tabId + "-blocks" ).draggable({ containment: "#" + tabId, scroll: false, stack: ".graphBlock", handle: ".graphBlock-handle" });/*.resizable({ containment: "#" + tabId });*/
 }
 
 /* ===Tabs=== */
@@ -65,8 +88,60 @@ function copyCurrentTab() {
 	tabs.tabs( "refresh" );
 	tabCounter++;
 	$('#' + id).html($('#' + currentTab).html());
-	$( "div#" + id ).children().removeClass( currentTab + "-blocks" ).addClass(id + "-blocks");
+	$( "div#" + id ).children().removeClass( currentTab + "-blocks"  ).addClass(id + "-blocks");
+	//$( "." + id + "-blocks" ).children().removeClass("ui-resizable-e ui-resizable-se ui-resizable-s ui-resizable-handle");
 	makeDraggable(id);
 }
 
 /* ========= */
+
+/*
+$(".graphBlock").hover( 
+	function() {
+		$( ".toolbox" ).removeClass("hidden").addClass("visible");
+	}, function() {
+		$( ".toolbox" ).removeClass("visible").addClass("hidden");
+	}
+);
+*/
+
+// Color picker
+
+function setNewColor(color, graphBlockId) {
+	
+};
+
+$(".gb-font-color").spectrum({
+	color: "#fdfa00",
+	showInput: true,
+	showAlpha: true,
+    showPalette: true,
+    showSelectionPalette: true,
+    palette: [ ],
+    clickoutFiresChange: true,
+    showInitial: true,
+    showButtons: false,
+    className: 'spectrum-font',
+    preferredFormat: "hex",
+    show: function(color) {
+    	var graphBlockId;
+	},
+    move: function(color) {
+    	var newColor = color.toHexString(); // #ff0000
+    	setNewColor(newColor);
+	}
+});
+
+$(".gb-bg-color").spectrum({
+    color: "#4f495c",
+    showInput: true,
+    showAlpha: true,
+    showPalette: true,
+    showSelectionPalette: true,
+    palette: [ ],
+    clickoutFiresChange: true,
+    showInitial: true,
+    showButtons: false,
+    className: 'spectrum-bg',
+    preferredFormat: "hex"
+});

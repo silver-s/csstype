@@ -5,6 +5,7 @@
 	<title>CssTYPE</title>
 	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="stylesheet" type="text/css" href="css/spectrum.css">
 	<link href='http://fonts.googleapis.com/css?family=Dancing+Script' rel='stylesheet' type='text/css'>
 </head>
 
@@ -39,18 +40,76 @@
 					<h4 id="text-instructions-1">Press the green "G"</h4>
 					<h5 id="text-instructions-2">to create a new graphic block</h5>
 				</span>
-				<!--<span class="graphBlock">
+				<span class="graphBlock workbench-1-blocks">
+					
 					<span class="graphBlock-handle"></span>
 					<span class="graphBlock-content" contenteditable="true">Example text</span>
-				</span>-->
+					<div class="toolbox" id="toolbox">
+						<div class="toolbox-topbar">
+							<input type='text' class="gb-font-color" />
+							<input type='number' class="gb-font-size" value="28" />
+							<input type='number' class="gb-font-size" value="24" />
+							<input type='text' class="gb-bg-color" />
+						</div>
+						<div class="toolbox-bottombar">
+							<select name="font" class="btn-font">
+								<optgroup label="Web Safe Fonts">
+									<option value="arial">Arial</option>
+									<option value="couriernew">Courier New</option>
+									<option value="comicsans">Comic Sans</option>
+									<option value="timesnewroman">Times New Roman</option>
+									<option value="impact">Impact</option>
+									<option value="georgia">Georgia</option>
+									<option value="trebuchet">Trebuchet</option>
+									<option value="webdings">Webdings</option>
+									<option value="verdana">Verdana</option>
+								</optgroup>
+								<optgroup label="Google Fonts">
+				    				<option value="dancingscript">Dancing Script</option>
+				  				</optgroup>
+							</select>
+						</div>
+					</div>
+					
+				</span>
+
+				
 			</div>
 			<div id="addNewTab"></div>
+		</div>
+	</div>
+	<div class="toolbox hidden" id="toolbox">
+		<div class="toolbox-topbar">
+			<input type='text' id="gb-font-color"></input>
+			<button class="btn-font-style">normal</button>
+			<input type='text' id="gb-font-size">28</input>
+			<input type='text' id="gb-font-size">24</input>
+			<input type='text' id="gb-bg-color"></input>
+		</div>
+		<div class="toolbox-bottombar">
+			<select name="font" class="btn-font">
+				<optgroup label="Web Safe Fonts">
+					<option value="arial">Arial</option>
+					<option value="couriernew">Courier New</option>
+					<option value="comicsans">Comic Sans</option>
+					<option value="timesnewroman">Times New Roman</option>
+					<option value="impact">Impact</option>
+					<option value="georgia">Georgia</option>
+					<option value="trebuchet">Trebuchet</option>
+					<option value="webdings">Webdings</option>
+					<option value="verdana">Verdana</option>
+				</optgroup>
+				<optgroup label="Google Fonts">
+    				<option value="dancingscript">Dancing Script</option>
+  				</optgroup>
+			</select>
 		</div>
 	</div>
 </body>
 
 <script src="js/jquery-1.10.2.js"></script>
 <script src="js/jquery-ui.js"></script>
+<script src="js/spectrum.js"></script>
 <script src="js/script.js"></script>
 
 </html> 

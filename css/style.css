@@ -17,10 +17,6 @@ body { /*font-size: 62.5%;  /* 16px × 62.5% = 10px */ }
 	border-width: thin!important;
 }
 
-.graphic-block { 
-	width: 20em;
-}
-
 #text-Css {
 	color: #8f8e8e;
 	display: inline;
@@ -87,9 +83,18 @@ body { /*font-size: 62.5%;  /* 16px × 62.5% = 10px */ }
 }
 
 .graphBlock {
-	background-color: #999fff;
-	color: blue;
 	position: absolute;
+
+
+}
+
+.graphBlock-content {
+	float: left;
+	background-color: #4F495C;
+	color: #FDFA00;
+	font-family: "Dancing Script", Arial, Helvetica, sans-serif; 
+	font-size: 2em;
+	padding: 2px 8px; 
 }
 
 #initial-instructions {
@@ -108,11 +113,11 @@ body { /*font-size: 62.5%;  /* 16px × 62.5% = 10px */ }
 
 .graphBlock-handle {
 	position: absolute;
-    left: -0.55em;
+    left: -11px;
     background-color: #FFF; 
     color: #000;
-    width: 0.5em;
-    height: 0.7em;
+    width: 10px;
+    height: 14px;
     cursor: move;
     border-left: 1px solid #000;
     border-top: 1px solid #000;
@@ -122,3 +127,75 @@ body { /*font-size: 62.5%;  /* 16px × 62.5% = 10px */ }
     border-bottom-right-radius: 0;
 }
 
+.toolbox {
+	font-size: 11px;
+	background-color: #ffffff;
+	float: left;
+	margin-left: 10px;
+}
+
+.hidden {
+	visibility: hidden;
+}
+
+.visible {
+	visibility: visible;
+}
+
+.gb-font-color {
+	border-style: solid;
+	border-width: 1px;
+	/*background-color: #fdfa00;*/
+	
+	width: 1.5em;
+	border-color: #000;
+	
+}
+
+.gb-bg-color {
+	/*background-color: #4f495c;*/
+	border-style: solid;
+	border-width: 1px;
+	height: 1.5em;
+	width: 1.5em;
+	border-color: #000;
+	cursor: pointer;
+	float: left;
+}
+
+.gb-font-style {
+	background-color: #fff;
+	border-style: solid;
+	border-width: 1px;
+	height: 1.5em;
+	cursor: pointer;
+	border-color: #000;
+	float: left;
+	margin-right: 4px;
+	line-height: 10px;
+}
+
+.gb-font-size {
+	background-color: #fff;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #000;
+	height: 1.5em;
+	cursor: pointer;
+	width: 3em;
+	float: left;
+	margin-right: 4px;
+	line-height: 10px;
+}
+
+.btn-font {
+	cursor: pointer;
+	font-size: 14px!important;
+	width: 100%;
+}
+
+.spectrum-font {
+	float: left;
+	margin-right: 4px!important;
+	
+}

@@ -84,17 +84,20 @@ body { /*font-size: 62.5%;  /* 16px × 62.5% = 10px */ }
 
 .graphBlock {
 	position: absolute;
-
-
 }
 
 .graphBlock-content {
+	background-color: #ffffff;
+	color: #000000;
 	float: left;
-	background-color: #4F495C;
-	color: #FDFA00;
-	font-family: "Dancing Script", Arial, Helvetica, sans-serif; 
-	font-size: 2em;
-	padding: 2px 8px; 
+	font-family: Verdana, Geneva, sans-serif; 
+	font-size: 16px;
+	line-height: 32px;
+	padding: 0px 8px;
+	width: 550px;
+	border-style: solid;
+	border-color: #000;
+	border-width: 1px;
 }
 
 #initial-instructions {
@@ -135,25 +138,21 @@ body { /*font-size: 62.5%;  /* 16px × 62.5% = 10px */ }
 }
 
 .hidden {
-	visibility: hidden;
+	display: none;
 }
 
 .visible {
-	visibility: visible;
+	display: inline;
 }
 
 .gb-font-color {
 	border-style: solid;
 	border-width: 1px;
-	/*background-color: #fdfa00;*/
-	
 	width: 1.5em;
 	border-color: #000;
-	
 }
 
 .gb-bg-color {
-	/*background-color: #4f495c;*/
 	border-style: solid;
 	border-width: 1px;
 	height: 1.5em;
@@ -163,39 +162,70 @@ body { /*font-size: 62.5%;  /* 16px × 62.5% = 10px */ }
 	float: left;
 }
 
-.gb-font-style {
-	background-color: #fff;
-	border-style: solid;
-	border-width: 1px;
-	height: 1.5em;
-	cursor: pointer;
-	border-color: #000;
-	float: left;
-	margin-right: 4px;
-	line-height: 10px;
-}
-
-.gb-font-size {
+.gb-num-input {
 	background-color: #fff;
 	border-style: solid;
 	border-width: 1px;
 	border-color: #000;
-	height: 1.5em;
-	cursor: pointer;
-	width: 3em;
+	height: 1.7em;
+	width: 3.5em;
 	float: left;
 	margin-right: 4px;
 	line-height: 10px;
-}
-
-.btn-font {
-	cursor: pointer;
-	font-size: 14px!important;
-	width: 100%;
 }
 
 .spectrum-font {
 	float: left;
-	margin-right: 4px!important;
-	
+	margin-right: 4px!important;	
+}
+
+.select-font {
+	width: 100%;
+}
+
+.select-font-style {
+	float: left;
+	margin-right: 4px;
+	background-color: #fff;
+	height: 2em;
+	cursor: pointer;
+	width: 7.4em;
+	border: 1px solid #000;
+}
+
+.btn-css {
+	float:left;
+	background-color: #fff;
+	height: 2em;
+	cursor: pointer;
+	width: 2.3em;
+	border: 1px solid #000;
+	font-size: xx-small;
+	text-align: center;
+}
+
+.fs-bold {
+	font-weight: bold;
+}
+
+.fs-italic {
+	font-style: italic;
+}
+
+.fs-bold-italic {
+	font-style: italic;
+	font-weight: bold;
+}
+
+.chosen-single {
+	font-family: "Verdana", "Geneva", "sans-serif";
+}
+
+.css-code {
+	position: absolute;
+    margin-top: 6px;
+    background-color: #FFF; 
+    color: #000;
+    width: 264px;
+    border: 1px solid #000;
 }

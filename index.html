@@ -6,7 +6,12 @@
 	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<link rel="stylesheet" type="text/css" href="css/spectrum.css">
+	<link rel="stylesheet" type="text/css" href="css/chosen.css">
 	<link href='http://fonts.googleapis.com/css?family=Dancing+Script' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Yesteryear' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Parisienne' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Devonshire' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Alex+Brush' rel='stylesheet' type='text/css'>
 </head>
 
 
@@ -26,12 +31,14 @@
 		
 		<div id="button-bar">
 		  <button id="btn-newGraphBlock" type="button" onclick="newGraphBlock()">G</button>
-		  <button id="btn-newGraphBlock" type="button" onclick="copyCurrentTab()">COPY</button>
+		  <button id="btn-newGraphBlock" type="button" onclick="hideElement('.toolbox')">hide toolbars</button>
+		  <button id="btn-newGraphBlock" type="button" onclick="showElement('.toolbox')">show toolbars</button>
 		</div>
 		
 		<div id="workarea">
 			<ul>
 				<li id="li-newTab"><a href="#addNewTab">+</a></li>
+				<li><a href="#copyCurrentTab">C</a></li>
 				<li><a href="#workbench-1">1</a></li>
 			</ul>
 			
@@ -40,10 +47,10 @@
 					<h4 id="text-instructions-1">Press the green "G"</h4>
 					<h5 id="text-instructions-2">to create a new graphic block</h5>
 				</span>
-				<span class="graphBlock workbench-1-blocks">
+				<!--<span class="graphBlock workbench-1-blocks">
 					
 					<span class="graphBlock-handle"></span>
-					<span class="graphBlock-content" contenteditable="true">Example text</span>
+					<span class="graphBlock-content" id="graphBlock-1-content" contenteditable="true">Example text</span>
 					<div class="toolbox" id="toolbox">
 						<div class="toolbox-topbar">
 							<input type='text' class="gb-font-color" />
@@ -71,38 +78,30 @@
 						</div>
 					</div>
 					
-				</span>
+				</span>-->
 
 				
 			</div>
+			<!-- For jQuery UI tabs -->
 			<div id="addNewTab"></div>
+			<div id="copyCurrentTab"></div>
 		</div>
 	</div>
-	<div class="toolbox hidden" id="toolbox">
+	<div class="toolbox hidden" id="newToolbarTemplate">
 		<div class="toolbox-topbar">
-			<input type='text' id="gb-font-color"></input>
-			<button class="btn-font-style">normal</button>
-			<input type='text' id="gb-font-size">28</input>
-			<input type='text' id="gb-font-size">24</input>
-			<input type='text' id="gb-bg-color"></input>
+			<input type='text' class="gb-font-color" />
+			<select name ="font-style" class="select-font-style">
+				<option value="normal" class="fs-normal">Normal</option>
+				<option value="italic" class="fs-italic">Italic</option>
+				<option value="bold" class="fs-bold">Bold</option>
+				<option value="bold italic" class="fs-bold-italic">Bold italic</option>
+			<input type='number' class="gb-num-input" id="gb-font-size" value="16" />
+			<input type='number' class="gb-num-input" id="gb-line-height" value="32" />
+			<input type='text' class="gb-bg-color" />
+			<button type='button' class="btn-css">css</button>
 		</div>
 		<div class="toolbox-bottombar">
-			<select name="font" class="btn-font">
-				<optgroup label="Web Safe Fonts">
-					<option value="arial">Arial</option>
-					<option value="couriernew">Courier New</option>
-					<option value="comicsans">Comic Sans</option>
-					<option value="timesnewroman">Times New Roman</option>
-					<option value="impact">Impact</option>
-					<option value="georgia">Georgia</option>
-					<option value="trebuchet">Trebuchet</option>
-					<option value="webdings">Webdings</option>
-					<option value="verdana">Verdana</option>
-				</optgroup>
-				<optgroup label="Google Fonts">
-    				<option value="dancingscript">Dancing Script</option>
-  				</optgroup>
-			</select>
+			<select name="font" class="select-font" id="select-font-hidden"></select>
 		</div>
 	</div>
 </body>
@@ -110,6 +109,7 @@
 <script src="js/jquery-1.10.2.js"></script>
 <script src="js/jquery-ui.js"></script>
 <script src="js/spectrum.js"></script>
+<script src="js/chosen.jquery.js"></script>
 <script src="js/script.js"></script>
 
 </html> 

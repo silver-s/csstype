@@ -1,54 +1,143 @@
 $( document ).ready(function() {
 	makeDraggable();
-	//$( ".graphBlock-content" ).resizable().draggable();
+	
+	// Add fonts to the select box
+	for (var i = 0; i < fontStack.length; i++) {
+		var fontText = fontStack[i]['text'];
+		var fontValue = fontStack[i]['value'];
+		var fontValueString ="";
+		for (var j = 0; j < fontValue.length; j++) {
+			fontValueString += "\"" + fontValue[j] +"\", " ;
+		}
+		fontValueString = fontValueString.substring(0, fontValueString.length - 2);
+		$("#select-font-hidden").append("<option id='" + fontText + "' value='" + fontValue + "'>" + fontText + "</option>");
+		$("[id='" + fontText + "']").css("font-family", fontValueString);		
+	}
+	$("#Verdana").attr("selected","selected");
+	
 });
 
-/* Later perhaps
-var webSafeFonts = new Array(
-	"Arial",
-	"Comic Sans",
-	"Courier New",
-	"Times New Roman",
-	"Impact",
-	"Georgia",
-	"Trebuchet",
-	"Webdings",
-	"Verdana"
-);
-
-var googleFonts = new Array(
-	"Dancing Script"
-);
-*/
-
+var graphBlockCounter = 1;
 
 function newGraphBlock() {
+	var graphBlockId = "graphBlock-" + graphBlockCounter;
 	var newGraphBlock = document.createElement("span");
 	newGraphBlock.className = "graphBlock " + currentTab + "-blocks";
-		
+	newGraphBlock.id = graphBlockId;
+	
+	// Handle	
 	var newGraphBlockHandle = document.createElement("span");
 	newGraphBlockHandle.className = "graphBlock-handle";
 	newGraphBlock.appendChild(newGraphBlockHandle);
 
+	// Content
 	var newGraphBlockContent = document.createElement("span");
 	newGraphBlockContent.className = "graphBlock-content";
+	newGraphBlockContent.id = graphBlockId + "-content";
 	newGraphBlockContent.innerHTML = "Lorem ipsum dolor sit amet";
 	newGraphBlockContent.setAttribute("contenteditable", "true");
 	newGraphBlock.appendChild(newGraphBlockContent);
 
-	$( "#toolbox" ).clone().appendTo( newGraphBlock );
+	// Toolbar
+	$( "#newToolbarTemplate" ).clone().appendTo( newGraphBlock );
 	document.getElementById(currentTab).appendChild(newGraphBlock);
-	$( "." + currentTab + "-blocks" ).children().removeClass("hidden");
-	makeDraggable();
-	$( "#initial-instructions" ).remove();
+	$( "#" + graphBlockId ).children().removeClass("hidden");
+	$( "#" + graphBlockId ).children( ".toolbox" ).attr( "id", graphBlockId + "-toolbox" );
 
+	
+	$("#" + graphBlockId + "-toolbox").find(".gb-font-color").attr("id", graphBlockId + "-fontColor");
+	$("#" + graphBlockId + "-fontColor").spectrum({
+		color: "#000",
+		showInput: true,
+	    showPalette: true,
+	    showSelectionPalette: true,
+	    palette: [ ],
+	    clickoutFiresChange: true,
+	    showInitial: true,
+	    showButtons: false,
+	    className: 'spectrum-font',
+	    preferredFormat: "hex",
+	    move: function(color) {
+	    	var newColor = color.toHexString();
+	    	setFontColor(newColor, graphBlockId);
+	    	updateCssCodeBox(graphBlockId);
+		}
+	});
+
+	$("#" + graphBlockId + "-toolbox").find(".gb-bg-color").attr("id", graphBlockId + "-bgColor");
+	$("#" + graphBlockId + "-bgColor").spectrum({
+	    color: "#fff",
+	    showInput: true,
+	    showPalette: true,
+	    showSelectionPalette: true,
+	    palette: [ ],
+	    clickoutFiresChange: true,
+	    showInitial: true,
+	    showButtons: false,
+	    className: 'spectrum-bg',
+	    preferredFormat: "hex",
+	    move: function(color) {
+	    	var newColor = color.toHexString();
+	    	setBgColor(newColor, graphBlockId);
+	    	updateCssCodeBox(graphBlockId);
+		}
+	});
+
+	
+	// Listeners
+	$("#" + graphBlockId + "-toolbox").find("#gb-font-size").attr("id", graphBlockId + "-fontSize");
+	$("#" + graphBlockId + "-fontSize" ).change(function() {
+		setFontSize( $(this).val(), graphBlockId);
+		updateCssCodeBox(graphBlockId);
+	});
+
+	$("#" + graphBlockId + "-toolbox").find("#gb-line-height").attr("id", graphBlockId + "-lineHeight");
+	$("#" + graphBlockId + "-lineHeight" ).change(function() {
+		setLineHeight( $(this).val(), graphBlockId);
+		updateCssCodeBox(graphBlockId);
+	});
+
+	$("#" + graphBlockId + "-toolbox").find(".select-font").attr("id", graphBlockId + "-font");
+	$("#" + graphBlockId + "-font" ).change(function() {
+		setFont( $(this).val(), graphBlockId);
+		updateCssCodeBox(graphBlockId);
+	});
+
+	$("#" + graphBlockId + "-font").chosen();
+
+	$("#" + graphBlockId + "-toolbox").find(".select-font-style").attr("id", graphBlockId + "-fontStyle");
+	$("#" + graphBlockId + "-fontStyle" ).change(function() {
+		setFontStyle( $(this).val(), graphBlockId);
+		updateCssCodeBox(graphBlockId);
+	});
+
+	$("#" + graphBlockId + "-toolbox").find(".btn-css").attr("id", graphBlockId + "-btnCss");
+	$("#" + graphBlockId + "-btnCss" ).click(function() {
+		updateCssCodeBox(graphBlockId);
+		$("#" + graphBlockId + "-cssCode").toggle();
+	});
+
+	$("#" + graphBlockId + "-toolbox").find(".chosen-single").attr("id", graphBlockId + "-chosen-single");
+
+
+	// CSS Code box
+
+	var newCssCodeBox = document.createElement("span");
+	newCssCodeBox.className = "css-code hidden";
+	newCssCodeBox.id = graphBlockId + "-cssCode";
+	document.getElementById(graphBlockId + "-toolbox").appendChild(newCssCodeBox);
+
+
+	$( "#initial-instructions" ).remove();
+	makeDraggable();
+	graphBlockCounter++;
 }
 
 function makeDraggable(tabId) {
 	if (tabId === undefined) {
 		tabId = currentTab;
 	}
-	$( "." + tabId + "-blocks" ).draggable({ containment: "#" + tabId, scroll: false, stack: ".graphBlock", handle: ".graphBlock-handle" });/*.resizable({ containment: "#" + tabId });*/
+	$( "." + tabId + "-blocks" ).draggable({ containment: "#" + tabId, scroll: false, stack: ".graphBlock", handle: ".graphBlock-handle" });
 }
 
 /* ===Tabs=== */
@@ -56,7 +145,7 @@ function makeDraggable(tabId) {
 var currentTab = "workbench-1";
 var tabCounter = 2;
 var tabs = $( "#workarea" ).tabs({
-	active: 1,
+	active: 2,
 	activate: function( event, ui ) {
 		var active = $("#workarea").tabs("option", "active");
         currentTabHash = $("#workarea ul>li a").eq(active).attr('href');
@@ -65,6 +154,10 @@ var tabs = $( "#workarea" ).tabs({
 	beforeActivate: function( event, ui ) {
 		if (ui.newPanel[0].id === "addNewTab") {
 			addNewTab();
+			return false;
+		}
+		if (ui.newPanel[0].id === "copyCurrentTab") {
+			copyCurrentTab();
 			return false;
 		}
 	}
@@ -78,6 +171,7 @@ function addNewTab() {
 	tabs.append( "<div id='" + id + "' class='workbench'></div>" );
 	tabs.tabs( "refresh" );
 	tabCounter++;
+	$( "#workarea" ).tabs( "option", "active", tabCounter);
 }
 
 function copyCurrentTab() {
@@ -89,59 +183,100 @@ function copyCurrentTab() {
 	tabCounter++;
 	$('#' + id).html($('#' + currentTab).html());
 	$( "div#" + id ).children().removeClass( currentTab + "-blocks"  ).addClass(id + "-blocks");
-	//$( "." + id + "-blocks" ).children().removeClass("ui-resizable-e ui-resizable-se ui-resizable-s ui-resizable-handle");
+	
 	makeDraggable(id);
+	$( "#workarea" ).tabs( "option", "active", tabCounter);
 }
 
-/* ========= */
 
-/*
-$(".graphBlock").hover( 
-	function() {
-		$( ".toolbox" ).removeClass("hidden").addClass("visible");
-	}, function() {
-		$( ".toolbox" ).removeClass("visible").addClass("hidden");
-	}
-);
-*/
+
+/* Toolbar */
+
+function hideElement(element) {
+	// element = ".toolbox"
+	$( element ).removeClass("visible").addClass("hidden");
+}
+
+function showElement(element) {
+	$( element ).removeClass("hidden").addClass("visible");
+}
+
+function updateCssCodeBox(graphBlockId) {
+	$("#" + graphBlockId + "-cssCode").html(
+		"font-family: " + $("#" + graphBlockId + "-content").css("font-family") + ";<br>" +
+		"font-style: " + $("#" + graphBlockId + "-content").css("font-style") + ";<br>" + 
+		"font-weight: " + $("#" + graphBlockId + "-content").css("font-weight") + ";<br>" + 
+		"font-size: " + $("#" + graphBlockId + "-content").css("font-size") + ";<br>" + 
+		"line-height: " + $("#" + graphBlockId + "-content").css("line-height") + ";<br>" + 
+		"color: " + $("#" + graphBlockId + "-fontColor").spectrum("get") + ";<br>" + 
+		"background-color: " + $("#" + graphBlockId + "-bgColor").spectrum("get") +";"
+	);
+}
 
 // Color picker
 
-function setNewColor(color, graphBlockId) {
-	
+function setFontColor(color, graphBlockId) {
+	$("#" + graphBlockId + "-content").css("color", color);
 };
 
-$(".gb-font-color").spectrum({
-	color: "#fdfa00",
-	showInput: true,
-	showAlpha: true,
-    showPalette: true,
-    showSelectionPalette: true,
-    palette: [ ],
-    clickoutFiresChange: true,
-    showInitial: true,
-    showButtons: false,
-    className: 'spectrum-font',
-    preferredFormat: "hex",
-    show: function(color) {
-    	var graphBlockId;
-	},
-    move: function(color) {
-    	var newColor = color.toHexString(); // #ff0000
-    	setNewColor(newColor);
-	}
-});
+function setBgColor(color, graphBlockId) {
+	$("#" + graphBlockId + "-content").css("background-color", color);
+};
 
-$(".gb-bg-color").spectrum({
-    color: "#4f495c",
-    showInput: true,
-    showAlpha: true,
-    showPalette: true,
-    showSelectionPalette: true,
-    palette: [ ],
-    clickoutFiresChange: true,
-    showInitial: true,
-    showButtons: false,
-    className: 'spectrum-bg',
-    preferredFormat: "hex"
-});
+function setFontSize( size, graphBlockId ) {
+	$("#" + graphBlockId + "-content").css("font-size", size + "px");
+}
+
+function setLineHeight( height, graphBlockId ) {
+	$("#" + graphBlockId + "-content").css("line-height", height + "px");
+}
+
+function setFont( font, graphBlockId ) {
+	//alert("graphblock: " + "#graphBlock-" + graphBlockCounter + "-content" );
+	$("#" + graphBlockId + "-content").css("font-family", font);
+	$("#" + graphBlockId + "-chosen-single").css("font-family", font);
+}
+
+function setFontStyle( fontstyle, graphBlockId ) {
+	if (fontstyle === "bold italic") {
+		$("#" + graphBlockId + "-content").css("font-style", "italic");
+		$("#" + graphBlockId + "-content").css("font-weight", "bold");
+	}
+	else if (fontstyle === "bold") {
+		$("#" + graphBlockId + "-content").css("font-style", "normal");
+		$("#" + graphBlockId + "-content").css("font-weight", "bold");
+	}
+	else {
+		$("#" + graphBlockId + "-content").css("font-style", fontstyle);
+		$("#" + graphBlockId + "-content").css("font-weight", "normal");
+	}
+}
+
+var fontStack = [
+	{ value: [ "Alex Brush" ] , text: "Alex Brush" },
+	{ value: [ "Arial", "Helvetica Neue", "Helvetica", "sans-serif" ], text: "Arial" },
+	{ value: [ "Arial Black", "Arial Bold", "Gadget", "sans-serif" ], text: "Arial Black" },
+	{ value: [ "Arial Narrow", "Arial", "sans-serif" ], text: "Arial Narrow" },
+	{ value: [ "Arial Rounded MT Bold", "Helvetica Rounded", "Arial", "sans-serif" ], text: "Arial Rounded MT Bold" },
+	{ value: [ "Calibri", "Candara", "Segoe", "Segoe UI", "Optima", "Arial", "sans-serif" ], text: "Calibri" },
+	{ value: [ "Candara, Calibri", "Segoe", "Segoe UI", "Optima", "Arial", "sans-serif" ], text: "Candara" },
+	{ value: [ "Century Gothic", "CenturyGothic", "AppleGothic", "sans-serif" ], text: "Century Gothic" },
+	{ value: [ "Comic Sans MS" ], text: "Comic Sans MS" },
+	{ value: [ "Courier New" ], text: "Courier New" },
+	{ value: [ "Dancing Script" ], text: "Dancing Script" },
+	{ value: [ "Devonshire" ], text: "Devonshire" },
+	{ value: [ "Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", "Arial", "sans-serif" ], text: "Franklin Gothic Medium" },
+	{ value: [ "Futura", "Trebuchet MS", "Arial", "sans-serif" ], text: "Futura" },
+	{ value: [ "Geneva", "Tahoma", "Verdana", "sans-serif" ], text: "Geneva" },
+	{ value: [ "Gill Sans", "Gill Sans MT", "Calibri", "sans-serif" ], text: "Gill Sans" },
+	{ value: [ "Georgia" ], text: "Georgia" },
+	{ value: [ "Helvetica Neue", "Helvetica", "Arial", "sans-serif" ], text: "Helvetica" },
+	{ value: [ "Impact", "Haettenschweiler", "Franklin Gothic Bold", "Charcoal", "Helvetica Inserat", "Bitstream Vera Sans Bold", "Arial Black", "sans serif" ], text: "Impact" },
+	{ value: [ "Parisienne" ], text: "Parisienne" },
+	{ value: [ "Segoe UI", "Frutiger", "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", "Arial", "sans-serif" ], text: "Segoe UI" },
+	{ value: [ "Tahoma", "Verdana", "Segoe", "sans-serif" ], text: "Tahoma" },
+	{ value: [ "Times New Roman" ], text: "Times New Roman" },
+	{ value: [ "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Tahoma", "sans-serif" ], text: "Trebuchet MS" },
+	{ value: [ "Verdana", "Geneva", "sans-serif" ], text: "Verdana" },
+	{ value: [ "Yesteryear" ], text: "Yesteryear" }	
+];

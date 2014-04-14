@@ -18,6 +18,7 @@ $( document ).ready(function() {
 });
 
 var graphBlockCounter = 1;
+var zindexCounter = 0;
 
 function newGraphBlock() {
 	var graphBlockId = "graphBlock-" + graphBlockCounter;
@@ -36,6 +37,7 @@ function newGraphBlock() {
 	newGraphBlockContent.id = graphBlockId + "-content";
 	newGraphBlockContent.innerHTML = "Lorem ipsum dolor sit amet";
 	newGraphBlockContent.setAttribute("contenteditable", "true");
+	newGraphBlockContent.setAttribute("spellcheck", false);
 	newGraphBlock.appendChild(newGraphBlockContent);
 
 	// Toolbar
@@ -43,6 +45,7 @@ function newGraphBlock() {
 	document.getElementById(currentTab).appendChild(newGraphBlock);
 	$( "#" + graphBlockId ).children().removeClass("hidden");
 	$( "#" + graphBlockId ).children( ".toolbox" ).attr( "id", graphBlockId + "-toolbox" );
+	$( "#" + graphBlockId + "-toolbox" ).css("display", "inline");
 
 	
 	$("#" + graphBlockId + "-toolbox").find(".gb-font-color").attr("id", graphBlockId + "-fontColor");
@@ -58,6 +61,11 @@ function newGraphBlock() {
 	    className: 'spectrum-font',
 	    preferredFormat: "hex",
 	    move: function(color) {
+	    	var newColor = color.toHexString();
+	    	setFontColor(newColor, graphBlockId);
+	    	updateCssCodeBox(graphBlockId);
+		},
+		change: function(color) {
 	    	var newColor = color.toHexString();
 	    	setFontColor(newColor, graphBlockId);
 	    	updateCssCodeBox(graphBlockId);
@@ -78,6 +86,11 @@ function newGraphBlock() {
 	    preferredFormat: "hex",
 	    move: function(color) {
 	    	var newColor = color.toHexString();
+	    	setBgColor(newColor, graphBlockId);
+	    	updateCssCodeBox(graphBlockId);
+		},
+		change: function(color) {
+ 			var newColor = color.toHexString();
 	    	setBgColor(newColor, graphBlockId);
 	    	updateCssCodeBox(graphBlockId);
 		}
@@ -128,6 +141,27 @@ function newGraphBlock() {
 	document.getElementById(graphBlockId + "-toolbox").appendChild(newCssCodeBox);
 
 
+	$("#" + graphBlockId).zIndex(zindexCounter);
+	zindexCounter++;
+
+	$("#" + graphBlockId).mousedown(function() {
+		$("#" + graphBlockId).zIndex(zindexCounter);
+		zindexCounter++;
+	});
+
+    
+    // Graphblock delete button
+	var newGraphBlockDelBtn = document.createElement("span");
+	newGraphBlockDelBtn.className = "btn-delGraphBlock";
+	newGraphBlockDelBtn.id = graphBlockId + "-delBtn";
+	document.getElementById(graphBlockId).appendChild(newGraphBlockDelBtn);
+	$("#" + graphBlockId + "-delBtn").html("x");
+
+	$("#" + graphBlockId + "-delBtn").click(function() {
+		$("#" + graphBlockId).remove();
+	});
+
+	
 	$( "#initial-instructions" ).remove();
 	makeDraggable();
 	graphBlockCounter++;
@@ -137,7 +171,7 @@ function makeDraggable(tabId) {
 	if (tabId === undefined) {
 		tabId = currentTab;
 	}
-	$( "." + tabId + "-blocks" ).draggable({ containment: "#" + tabId, scroll: false, stack: ".graphBlock", handle: ".graphBlock-handle" });
+	$( "." + tabId + "-blocks" ).draggable({ containment: "#" + tabId, scroll: false, /*stack: ".graphBlock",*/ handle: ".graphBlock-handle" });
 }
 
 /* ===Tabs=== */
@@ -190,16 +224,7 @@ function copyCurrentTab() {
 
 
 
-/* Toolbar */
-
-function hideElement(element) {
-	// element = ".toolbox"
-	$( element ).removeClass("visible").addClass("hidden");
-}
-
-function showElement(element) {
-	$( element ).removeClass("hidden").addClass("visible");
-}
+/* Toolbar stuff */
 
 function updateCssCodeBox(graphBlockId) {
 	$("#" + graphBlockId + "-cssCode").html(
@@ -213,7 +238,6 @@ function updateCssCodeBox(graphBlockId) {
 	);
 }
 
-// Color picker
 
 function setFontColor(color, graphBlockId) {
 	$("#" + graphBlockId + "-content").css("color", color);
@@ -280,3 +304,27 @@ var fontStack = [
 	{ value: [ "Verdana", "Geneva", "sans-serif" ], text: "Verdana" },
 	{ value: [ "Yesteryear" ], text: "Yesteryear" }	
 ];
+
+
+/* Shortcut keys */
+
+$(window).keypress(function(e){
+  var code = e.which || e.keyCode;
+  switch(code) {
+  	case 100:
+  		$(".toolbox").toggle();
+  		$("#newToolbarTemplate").css("display", "none");
+  		return false;
+
+    case 103:
+      newGraphBlock();
+      return false;
+
+    case 110:
+    	addNewTab();
+    	return false;
+
+    default:
+      break;
+  }
+});

@@ -1,6 +1,9 @@
 $( document ).ready(function() {
-	makeDraggable();
-	
+	//makeDraggable();
+	shortcutKeys();
+
+	designMode = new Boolean(false);
+		
 	// Add fonts to the select box
 	for (var i = 0; i < fontStack.length; i++) {
 		var fontText = fontStack[i]['text'];
@@ -41,10 +44,9 @@ function newGraphBlock() {
 	newGraphBlock.appendChild(newGraphBlockContent);
 
 	// Toolbar
-	$( "#newToolbarTemplate" ).clone().appendTo( newGraphBlock );
+	$( "#toolboxTemplate" ).clone().appendTo( newGraphBlock );
 	document.getElementById(currentTab).appendChild(newGraphBlock);
-	$( "#" + graphBlockId ).children().removeClass("hidden");
-	$( "#" + graphBlockId ).children( ".toolbox" ).attr( "id", graphBlockId + "-toolbox" );
+	$( "#" + graphBlockId ).children( "#toolboxTemplate" ).attr({ id: graphBlockId + "-toolbox", class: "toolbox" });
 	$( "#" + graphBlockId + "-toolbox" ).css("display", "inline");
 
 	
@@ -161,7 +163,11 @@ function newGraphBlock() {
 		$("#" + graphBlockId).remove();
 	});
 
-	
+
+	// Hide toolboxes if in design mode
+	if (designMode === true) { $( "#" + graphBlockId + "-toolbox" ).css("display", "none"); }
+
+
 	$( "#initial-instructions" ).remove();
 	makeDraggable();
 	graphBlockCounter++;
@@ -308,23 +314,18 @@ var fontStack = [
 
 /* Shortcut keys */
 
-$(window).keypress(function(e){
-  var code = e.which || e.keyCode;
-  switch(code) {
-  	case 100:
-  		$(".toolbox").toggle();
-  		$("#newToolbarTemplate").css("display", "none");
-  		return false;
+function shortcutKeys() {
+	$(document).bind('keydown', 'ctrl+m', function(){
+		if (designMode === true) {
+			$(".toolbox").toggle();
+			designMode = false;
+ 		}
+		else {
+			$(".toolbox").toggle();
+			designMode = true;
+		}
+	 });
+	$(document).bind('keydown', 'ctrl+g', function(){ newGraphBlock(); });
+	$(document).bind('keydown', 'ctrl+x', function(){ addNewTab(); });
+}
 
-    case 103:
-      newGraphBlock();
-      return false;
-
-    case 110:
-    	addNewTab();
-    	return false;
-
-    default:
-      break;
-  }
-});

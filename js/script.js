@@ -21,6 +21,7 @@ $( document ).ready(function() {
 });
 
 var graphBlockCounter = 1;
+var tabGbCounter = [0]; // Count graphblocks per tab for positioning
 var zindexCounter = 0;
 
 function newGraphBlock() {
@@ -38,11 +39,11 @@ function newGraphBlock() {
 	var newGraphBlockContent = document.createElement("span");
 	newGraphBlockContent.className = "graphBlock-content";
 	newGraphBlockContent.id = graphBlockId + "-content";
-	newGraphBlockContent.innerHTML = "Lorem ipsum dolor sit amet";
+	newGraphBlockContent.innerHTML = "The quick brown fox jumps over the lazy dog";
 	newGraphBlockContent.setAttribute("contenteditable", "true");
 	newGraphBlockContent.setAttribute("spellcheck", false);
 	newGraphBlock.appendChild(newGraphBlockContent);
-
+	
 	// Toolbar
 	$( "#toolboxTemplate" ).clone().appendTo( newGraphBlock );
 	document.getElementById(currentTab).appendChild(newGraphBlock);
@@ -134,6 +135,13 @@ function newGraphBlock() {
 
 	$("#" + graphBlockId + "-toolbox").find(".chosen-single").attr("id", graphBlockId + "-chosen-single");
 
+	// Paste detection
+	$("#" + graphBlockId + "-content").bind('paste', function(e) {
+		var pastedText = e.originalEvent.clipboardData.getData('Text');
+        $("#" + graphBlockId + "-content").append(pastedText);
+        return false;
+    });
+
 
 	// CSS Code box
 
@@ -157,7 +165,7 @@ function newGraphBlock() {
 	newGraphBlockDelBtn.className = "btn-delGraphBlock";
 	newGraphBlockDelBtn.id = graphBlockId + "-delBtn";
 	document.getElementById(graphBlockId).appendChild(newGraphBlockDelBtn);
-	$("#" + graphBlockId + "-delBtn").html("x");
+	$("#" + graphBlockId + "-delBtn").html("<i class='fa fa-times'></i>");
 
 	$("#" + graphBlockId + "-delBtn").click(function() {
 		$("#" + graphBlockId).remove();
@@ -165,19 +173,43 @@ function newGraphBlock() {
 
 
 	// Hide toolboxes if in design mode
-	if (designMode === true) { $( "#" + graphBlockId + "-toolbox" ).css("display", "none"); }
+	if (designMode === true) { 
+		$( "#" + graphBlockId + "-toolbox" ).css("display", "none");
+		$("#" + graphBlockId + "-delBtn").css("display", "none");
+	}
+
+
+	// Position graphblock
+
+	currentTabNr = currentTab.substr(currentTab.length-1);
+	$("#" + graphBlockId).css({"top": tabGbCounter[currentTabNr-1] * 15  + "px", "left": tabGbCounter[currentTabNr-1] * 15 + 10 + "px"});
+
+
+	makeDraggable();
+	$("#" + graphBlockId).on( "dragstart", function( event, ui ) {
+		$("#" + graphBlockId + "-toolbox").css("display", "none");
+		tabGbCounter[currentTabNr-1]--;
+	} );
+	$("#" + graphBlockId).on( "dragstop", function( event, ui ) {
+		$("#" + graphBlockId + "-toolbox").css("display", "inline");
+	} );
 
 
 	$( "#initial-instructions" ).remove();
-	makeDraggable();
 	graphBlockCounter++;
+	tabGbCounter[currentTabNr-1]++;
 }
 
 function makeDraggable(tabId) {
 	if (tabId === undefined) {
 		tabId = currentTab;
 	}
-	$( "." + tabId + "-blocks" ).draggable({ containment: "#" + tabId, scroll: false, /*stack: ".graphBlock",*/ handle: ".graphBlock-handle" });
+	$( "." + tabId + "-blocks" ).draggable({ 
+		containment: "#" + tabId, 
+		scroll: false, 
+		/*stack: ".graphBlock",*/ 
+		handle: ".graphBlock-handle"
+	});
 }
 
 /* ===Tabs=== */
@@ -210,6 +242,7 @@ function addNewTab() {
 	tabs.find( ".ui-tabs-nav" ).append( li );
 	tabs.append( "<div id='" + id + "' class='workbench'></div>" );
 	tabs.tabs( "refresh" );
+	tabGbCounter.push(0);
 	tabCounter++;
 	$( "#workarea" ).tabs( "option", "active", tabCounter);
 }
@@ -262,7 +295,6 @@ function setLineHeight( height, graphBlockId ) {
 }
 
 function setFont( font, graphBlockId ) {
-	//alert("graphblock: " + "#graphBlock-" + graphBlockCounter + "-content" );
 	$("#" + graphBlockId + "-content").css("font-family", font);
 	$("#" + graphBlockId + "-chosen-single").css("font-family", font);
 }
@@ -318,10 +350,12 @@ function shortcutKeys() {
 	$(document).bind('keydown', 'ctrl+m', function(){
 		if (designMode === true) {
 			$(".toolbox").toggle();
+			$(".btn-delGraphBlock").toggle();
 			designMode = false;
  		}
 		else {
 			$(".toolbox").toggle();
+			$(".btn-delGraphBlock").toggle();
 			designMode = true;
 		}
 	 });

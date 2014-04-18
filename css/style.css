@@ -1,8 +1,7 @@
-body { /*font-size: 62.5%;  /* 16px × 62.5% = 10px */ }
-
-#container {
-	margin: 0 auto;
-	width: 70%;	
+body { 
+	/*font-size: 62.5%;  /* 16px × 62.5% = 10px */ 
+	margin-left: 0px;
+	margin-right: 0px;
 }
 
 #workarea {
@@ -13,8 +12,10 @@ body { /*font-size: 62.5%;  /* 16px × 62.5% = 10px */ }
 	clear:left;
 	margin-top: 0.5em;
 	height: 600px;
-	border-style: solid!important;
-	border-width: thin!important;
+	position: relative;
+	margin-left: 0px;
+	margin-right: 0px;
+	padding-left: 0px;
 }
 
 #text-Css {
@@ -51,6 +52,7 @@ body { /*font-size: 62.5%;  /* 16px × 62.5% = 10px */ }
 	float:right;
 	text-align: left;
 	width: 33%;
+	margin-right: 2%;
 }
 
 #header-text-right p {
@@ -66,6 +68,7 @@ body { /*font-size: 62.5%;  /* 16px × 62.5% = 10px */ }
   clear: left;
   width: 100%;
   text-align: center;
+  color: #177D5C;
 }
 
 #btn-newGraphBlock {
@@ -81,6 +84,7 @@ body { /*font-size: 62.5%;  /* 16px × 62.5% = 10px */ }
 #li-newTab {
 	text-align: right;
 }
+
 
 .graphBlock {
 	position: absolute;
@@ -133,10 +137,11 @@ body { /*font-size: 62.5%;  /* 16px × 62.5% = 10px */ }
 }
 
 .toolbox {
-	font-size: 11px;
-	background-color: #ffffff;
-	float: left;
-	margin-left: 10px;
+	background-color: #FFFFFF;
+    font-size: 11px;
+    left: 576px;
+    position: absolute;
+    width: 266px;
 }
 
 .hidden {
@@ -202,8 +207,8 @@ body { /*font-size: 62.5%;  /* 16px × 62.5% = 10px */ }
 	cursor: pointer;
 	width: 2.3em;
 	border: 1px solid #000;
-	font-size: xx-small;
 	text-align: center;
+	padding: 0;
 }
 
 .fs-bold {
@@ -238,6 +243,6 @@ body { /*font-size: 62.5%;  /* 16px × 62.5% = 10px */ }
 	cursor: pointer;
 	font-family: "Arial Black", "Arial Bold", Gadget, sans-serif;
 	font-size: 14px;
-	margin-left: 4px;
 	position: absolute;
+	left: 846px;
 }

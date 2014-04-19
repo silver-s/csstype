@@ -18,10 +18,7 @@ $( document ).ready(function() {
 	}
 	$("#Verdana").attr("selected","selected");
 
-	
-	if (localStorage) {
-		loadFromStorage(); 
-	}
+	if (localStorage) {	loadFromStorage(); }
 	
 		
 });
@@ -50,185 +47,22 @@ function newGraphBlock() {
 	newGraphBlockContent.setAttribute("spellcheck", false);
 	newGraphBlock.appendChild(newGraphBlockContent);
 	
-	// Toolbar
-	$( "#toolboxTemplate" ).clone().appendTo( newGraphBlock );
 	document.getElementById(currentTab).appendChild(newGraphBlock);
-	$( "#" + graphBlockId ).children( "#toolboxTemplate" ).attr({ id: graphBlockId + "-toolbox", class: "toolbox" });
-	$( "#" + graphBlockId + "-toolbox" ).css("display", "inline");
-
 	
-	$("#" + graphBlockId + "-toolbox").find(".gb-font-color").attr("id", graphBlockId + "-fontColor");
-	$("#" + graphBlockId + "-fontColor").spectrum({
-		color: "#000",
-		showInput: true,
-	    showPalette: true,
-	    showSelectionPalette: true,
-	    palette: [ ],
-	    clickoutFiresChange: true,
-	    showInitial: true,
-	    showButtons: false,
-	    className: 'spectrum-font',
-	    preferredFormat: "hex",
-	    move: function(color) {
-	    	var newColor = color.toHexString();
-	    	setFontColor(newColor, graphBlockId);
-	    	updateCssCodeBox(graphBlockId);
-		},
-		change: function(color) {
-	    	var newColor = color.toHexString();
-	    	setFontColor(newColor, graphBlockId);
-	    	updateCssCodeBox(graphBlockId);
-		}
-	});
-
-	$("#" + graphBlockId + "-toolbox").find(".gb-bg-color").attr("id", graphBlockId + "-bgColor");
-	$("#" + graphBlockId + "-bgColor").spectrum({
-	    color: "#fff",
-	    showInput: true,
-	    showPalette: true,
-	    showSelectionPalette: true,
-	    palette: [ ],
-	    clickoutFiresChange: true,
-	    showInitial: true,
-	    showButtons: false,
-	    className: 'spectrum-bg',
-	    preferredFormat: "hex",
-	    move: function(color) {
-	    	var newColor = color.toHexString();
-	    	setBgColor(newColor, graphBlockId);
-	    	updateCssCodeBox(graphBlockId);
-		},
-		change: function(color) {
- 			var newColor = color.toHexString();
-	    	setBgColor(newColor, graphBlockId);
-	    	updateCssCodeBox(graphBlockId);
-		}
-	});
-
+	setEventHandlers(graphBlockId);
 	
-	// Listeners
-	$("#" + graphBlockId + "-toolbox").find("#gb-font-size").attr("id", graphBlockId + "-fontSize");
-	$("#" + graphBlockId + "-fontSize" ).change(function() {
-		setFontSize( $(this).val(), graphBlockId);
-		updateCssCodeBox(graphBlockId);
-	});
-
-	$("#" + graphBlockId + "-toolbox").find("#gb-line-height").attr("id", graphBlockId + "-lineHeight");
-	$("#" + graphBlockId + "-lineHeight" ).change(function() {
-		setLineHeight( $(this).val(), graphBlockId);
-		updateCssCodeBox(graphBlockId);
-	});
-
-	$("#" + graphBlockId + "-toolbox").find(".select-font").attr("id", graphBlockId + "-font");
-	$("#" + graphBlockId + "-font" ).change(function() {
-		setFont( $(this).val(), graphBlockId);
-		updateCssCodeBox(graphBlockId);
-	});
-
-	$("#" + graphBlockId + "-font").chosen();
-	
-	$("#" + graphBlockId + "-toolbox").find(".chosen-single").attr("id", graphBlockId + "-chosen-single");
-	$("#" + graphBlockId + "-toolbox").find(".chosen-results").attr("id", graphBlockId + "-chosen-results");
-
-	
-	$("#" + graphBlockId + "-toolbox").find(".btn-bold").attr("id", graphBlockId + "-bold");
-	$("#" + graphBlockId + "-bold" ).click(function() {
-		$("#" + graphBlockId + "-content, #" + graphBlockId + "-chosen-results, #" + graphBlockId + "-chosen-single").toggleClass("bold");
-		updateCssCodeBox(graphBlockId);
-	});
-
-	$("#" + graphBlockId + "-toolbox").find(".btn-italic").attr("id", graphBlockId + "-italic");
-	$("#" + graphBlockId + "-italic" ).click(function() {
-		$("#" + graphBlockId + "-content, #" + graphBlockId + "-chosen-results, #" + graphBlockId + "-chosen-single").toggleClass("italic");
-		updateCssCodeBox(graphBlockId);
-	});
-
-	$("#" + graphBlockId + "-toolbox").find(".btn-underline").attr("id", graphBlockId + "-underline");
-	$("#" + graphBlockId + "-underline" ).click(function() {
-		$("#" + graphBlockId + "-content, #" + graphBlockId + "-chosen-results, #" + graphBlockId + "-chosen-single").toggleClass("underline");
-		updateCssCodeBox(graphBlockId);
-	});
-
-
-	$("#" + graphBlockId + "-toolbox").find(".btn-css").attr("id", graphBlockId + "-btnCss");
-	$("#" + graphBlockId + "-btnCss" ).click(function() {
-		updateCssCodeBox(graphBlockId);
-		$("#" + graphBlockId + "-cssCode").toggle();
-	});
-
-
-	// Paste detection
-	$("#" + graphBlockId + "-content").bind('paste', function(e) {
-		var pastedText = e.originalEvent.clipboardData.getData('Text');
-        $("#" + graphBlockId + "-content").append(pastedText);
-        return false;
-    });
-
-
-	// CSS Code box
-
-	var newCssCodeBox = document.createElement("span");
-	newCssCodeBox.className = "css-code hidden";
-	newCssCodeBox.id = graphBlockId + "-cssCode";
-	document.getElementById(graphBlockId + "-toolbox").appendChild(newCssCodeBox);
-
-
-	$("#" + graphBlockId).zIndex(zindexCounter);
-	zindexCounter++;
-
-	$("#" + graphBlockId).mousedown(function() {
-		$("#" + graphBlockId).zIndex(zindexCounter);
-		zindexCounter++;
-	});
-
-    
-    // Graphblock delete button
-	var newGraphBlockDelBtn = document.createElement("span");
-	newGraphBlockDelBtn.className = "btn-delGraphBlock";
-	newGraphBlockDelBtn.id = graphBlockId + "-delBtn";
-	document.getElementById(graphBlockId).appendChild(newGraphBlockDelBtn);
-	$("#" + graphBlockId + "-delBtn").html("<i class='fa fa-times'></i>");
-
-	$("#" + graphBlockId + "-delBtn").click(function() {
-		$("#" + graphBlockId).remove();
-	});
-
-
-	// Hide toolboxes if in design mode
-	if (designMode === true) { 
-		$( "#" + graphBlockId + "-toolbox" ).css("display", "none");
-		$("#" + graphBlockId + "-delBtn").css("display", "none");
-	}
-
-
 	// Position graphblock
 	currentTabNr = currentTab.substr(10,currentTab.length);
 	$("#" + graphBlockId).css({"top": tabGbCounter[currentTabNr-1] * 15  + 5 + "px", "left": tabGbCounter[currentTabNr-1] * 15 + 15 + "px"});
 
-
 	makeDraggable();
-	$("#" + graphBlockId).on( "dragstart", function( event, ui ) {
-		$("#" + graphBlockId + "-toolbox").css("display", "none");
-		$("#" + graphBlockId + "-delBtn").css("display", "none");
-		if (tabGbCounter > 0) {
-			tabGbCounter[currentTabNr-1]--;
-		}
-	} );
-	$("#" + graphBlockId).on( "dragstop", function( event, ui ) {
-		if (designMode == false) {
-			$("#" + graphBlockId + "-toolbox").css("display", "inline");
-			$("#" + graphBlockId + "-delBtn").css("display", "inline");
-		}
-	} );
-
-
-	$( "#initial-instructions" ).remove();
 	graphBlockCounter++;
 	tabGbCounter[currentTabNr-1]++;
-	storeItem(graphBlockId);
-/*
+	$( "#initial-instructions" ).remove();
+
 	
-		$("#graphBlock-1-chosen-results").children().on( {
+	
+	/*$("#graphBlock-1-chosen-results").children().on( {
     		mouseover: function() {
         		currentFont = $("#" + graphBlockId + "-content").css("font-family");
 				$("#" + graphBlockId + "-content").css("font-family", $(this).css("font-family"));
@@ -244,12 +78,10 @@ function newGraphBlock() {
     			$(".active-result").stop();	
     		}
 		});
-  */    
-
-		
-
-
+ 	 */    
 }
+
+
 function makeDraggable(tabId) {
 	if (tabId === undefined) {
 		tabId = currentTab;
@@ -352,6 +184,238 @@ function setFont( font, graphBlockId ) {
 }
 
 
+function setEventHandlers(graphBlockId) {
+	// Copy toolbox
+	$( "#toolboxTemplate" ).clone().appendTo($("#" + graphBlockId));
+	
+	$( "#" + graphBlockId ).children("#toolboxTemplate").attr({ id: graphBlockId + "-toolbox", class: "toolbox" });
+	$( "#" + graphBlockId + "-toolbox" ).css("display", "inline");
+	$( "#" + graphBlockId + "-toolbox").find("#cssCodeTemplate").attr({ id: graphBlockId + "-cssCode", class: "css-code hidden" });
+	$( "#" + graphBlockId + "-toolbox").find(".btn-delGraphBlock").attr("id", graphBlockId + "-delBtn");
+	
+	// Hide toolbox if in design mode
+	if (designMode === true) { 
+		$("#" + graphBlockId + "-toolbox").css("display", "none");
+	}
+
+
+	// Font color handler
+	$("#" + graphBlockId + "-toolbox").find(".gb-font-color").attr("id", graphBlockId + "-fontColor");
+	$("#" + graphBlockId + "-fontColor").spectrum({
+		color: $("#" + graphBlockId + "-content").css("color"),
+		showInput: true,
+	    showPalette: true,
+	    showSelectionPalette: true,
+	    palette: [ ],
+	    clickoutFiresChange: true,
+	    showInitial: true,
+	    showButtons: false,
+	    className: 'spectrum-font',
+	    preferredFormat: "hex",
+	    move: function(color) {
+	    	var newColor = color.toHexString();
+	    	setFontColor(newColor, graphBlockId);
+	    	updateCssCodeBox(graphBlockId);
+		},
+		change: function(color) {
+	    	var newColor = color.toHexString();
+	    	setFontColor(newColor, graphBlockId);
+	    	updateCssCodeBox(graphBlockId);
+		}
+	});	
+
+
+	// Background color handler
+	$("#" + graphBlockId + "-toolbox").find(".gb-bg-color").attr("id", graphBlockId + "-bgColor");
+	$("#" + graphBlockId + "-bgColor").spectrum({
+	    color: $("#" + graphBlockId + "-content").css("background-color"),
+	    showInput: true,
+	    showPalette: true,
+	    showSelectionPalette: true,
+	    palette: [ ],
+	    clickoutFiresChange: true,
+	    showInitial: true,
+	    showButtons: false,
+	    className: 'spectrum-bg',
+	    preferredFormat: "hex",
+	    move: function(color) {
+	    	var newColor = color.toHexString();
+	    	setBgColor(newColor, graphBlockId);
+	    	updateCssCodeBox(graphBlockId);
+		},
+		change: function(color) {
+ 			var newColor = color.toHexString();
+	    	setBgColor(newColor, graphBlockId);
+	    	updateCssCodeBox(graphBlockId);
+		}
+	});
+
+
+	$("#" + graphBlockId + "-toolbox").find("#gb-font-size").attr("id", graphBlockId + "-fontSize");
+	$("#" + graphBlockId + "-fontSize" ).change(function() {
+		setFontSize( $(this).val(), graphBlockId);
+		updateCssCodeBox(graphBlockId);
+	});
+
+	$("#" + graphBlockId + "-toolbox").find("#gb-line-height").attr("id", graphBlockId + "-lineHeight");
+	$("#" + graphBlockId + "-lineHeight" ).change(function() {
+		setLineHeight( $(this).val(), graphBlockId);
+		updateCssCodeBox(graphBlockId);
+	});
+
+	$("#" + graphBlockId + "-toolbox").find(".select-font").attr("id", graphBlockId + "-font");
+	$("#" + graphBlockId + "-font" ).change(function() {
+		setFont( $(this).val(), graphBlockId);
+		updateCssCodeBox(graphBlockId);
+	});
+
+	var graphBlockFont = $("#" + graphBlockId + "-content").css("font-family").split(",");
+	graphBlockFont = graphBlockFont[0];
+	$("#" + graphBlockId + "-font").find("#Verdana").removeAttr("selected");
+	$("#" + graphBlockId + "-font").find("option[id='" + graphBlockFont + "']").attr("selected", "selected");
+
+	$("#" + graphBlockId + "-font").chosen({width: "100%"});
+	
+	$("#" + graphBlockId + "-toolbox").find(".chosen-single").attr("id", graphBlockId + "-chosen-single");
+	$("#" + graphBlockId + "-toolbox").find(".chosen-results").attr("id", graphBlockId + "-chosen-results");
+	$("#" + graphBlockId + "-chosen-results, #" + graphBlockId + "-chosen-single").css({
+		"font-weight": $("#" + graphBlockId + "-content").css("font-weight"),
+		"text-decoration": $("#" + graphBlockId + "-content").css("text-decoration"),
+		"font-style": $("#" + graphBlockId + "-content").css("font-style"),
+		"font-family": $("#" + graphBlockId + "-content").css("font-family")
+	});
+
+	$("#" + graphBlockId + "-toolbox").find(".btn-bold").attr("id", graphBlockId + "-bold");
+	$("#" + graphBlockId + "-bold" ).click(function() {
+		$("#" + graphBlockId + "-content, #" + graphBlockId + "-chosen-results, #" + graphBlockId + "-chosen-single").toggleClass("bold");
+		updateCssCodeBox(graphBlockId);
+	});
+
+	$("#" + graphBlockId + "-toolbox").find(".btn-italic").attr("id", graphBlockId + "-italic");
+	$("#" + graphBlockId + "-italic" ).click(function() {
+		$("#" + graphBlockId + "-content, #" + graphBlockId + "-chosen-results, #" + graphBlockId + "-chosen-single").toggleClass("italic");
+		updateCssCodeBox(graphBlockId);
+	});
+
+	$("#" + graphBlockId + "-toolbox").find(".btn-underline").attr("id", graphBlockId + "-underline");
+	$("#" + graphBlockId + "-underline" ).click(function() {
+		$("#" + graphBlockId + "-content, #" + graphBlockId + "-chosen-results, #" + graphBlockId + "-chosen-single").toggleClass("underline");
+		updateCssCodeBox(graphBlockId);
+	});
+
+
+	$("#" + graphBlockId + "-toolbox").find(".btn-css").attr("id", graphBlockId + "-btnCss");
+	$("#" + graphBlockId + "-btnCss" ).click(function() {
+		updateCssCodeBox(graphBlockId);
+		$("#" + graphBlockId + "-cssCode").toggle();
+	});
+
+
+	// Paste detection
+	$("#" + graphBlockId + "-content").bind('paste', function(e) {
+		var pastedText = e.originalEvent.clipboardData.getData('Text');
+        $("#" + graphBlockId + "-content").append(pastedText);
+        return false;
+    });
+
+
+	// GraphBlock delete button
+	$("#" + graphBlockId + "-delBtn").click(function() {
+		$("#" + graphBlockId).remove();
+	});
+
+
+	// Zindex
+	$("#" + graphBlockId).zIndex(zindexCounter);
+	zindexCounter++;
+
+	$("#" + graphBlockId).mousedown(function() {
+		$("#" + graphBlockId).zIndex(zindexCounter);
+		zindexCounter++;
+	});
+
+
+	// Hide toolbar when dragging
+	$("#" + graphBlockId).on( "dragstart", function( event, ui ) {
+		$("#" + graphBlockId + "-toolbox").css("display", "none");
+		if (tabGbCounter > 0) {
+			tabGbCounter[currentTabNr-1]--;
+		}
+	});
+
+	$("#" + graphBlockId).on( "dragstop", function( event, ui ) {
+		if (designMode == false) {
+			$("#" + graphBlockId + "-toolbox").css("display", "inline");
+		}
+	});
+}
+
+
+/* Shortcut keys */
+
+function shortcutKeys() {
+	$(document).bind('keydown', 'ctrl+d', function(){
+		if (designMode === true) {
+			$(".toolbox").toggle();
+			$(".btn-delGraphBlock").toggle();
+			designMode = false;
+ 		}
+		else {
+			$(".toolbox").toggle();
+			$(".btn-delGraphBlock").toggle();
+			designMode = true;	
+		}
+		return false;
+	 });
+	$(document).bind('keydown', 'ctrl+g', function(){ newGraphBlock(); return false; });
+
+	$(document).bind('keydown', 'ctrl+n', function(){ addNewTab(); return false });
+}
+
+
+
+function saveToStorage() {
+	$("#saveSpinner").css("display", "inline-block");
+	for (var i = 1; i < tabCounter; i++ ) {
+		localStorage.setItem("workbench-" + i, $("#workbench-" + i).html());
+	}
+	setTimeout(function(){ $("#saveSpinner").css("display", "none") },900);
+}
+
+function loadFromStorage() {
+	$( "#initial-instructions" ).remove();
+
+	var tabId;
+	for (var i = 0; i < localStorage.length; i++) {
+		tabId = localStorage.key(i);
+		if ($("#" + tabId).length > 0) {
+			$("#" + tabId).append(localStorage.getItem(localStorage.key(i)));
+		}
+		else {
+			addNewTab();
+			$("#" + tabId).append(localStorage.getItem(localStorage.key(i)));
+		}
+		makeDraggable(tabId);
+	}
+	$("#workarea").tabs( "option", "active", 0 );
+
+	var graphBlocks = ($(".graphBlock"));
+	var graphBlockId;
+
+	for (var j = 0; j < graphBlocks.length; j++) {
+		graphBlockId = graphBlocks[j].id;
+
+		// Remove old toolbox and add toolbox with working event handlers
+		$("#" + graphBlockId + "-toolbox").remove();
+		setEventHandlers(graphBlockId);
+		graphBlockCounter++;
+	}
+
+	
+
+}
+
+
 var fontStack = [
 	{ value: [ "Alex Brush" ] , text: "Alex Brush" },
 	{ value: [ "Arial", "Helvetica Neue", "Helvetica", "sans-serif" ], text: "Arial" },
@@ -380,37 +444,3 @@ var fontStack = [
 	{ value: [ "Verdana", "Geneva", "sans-serif" ], text: "Verdana" },
 	{ value: [ "Yesteryear" ], text: "Yesteryear" }	
 ];
-
-
-/* Shortcut keys */
-
-function shortcutKeys() {
-	$(document).bind('keydown', 'ctrl+d', function(){
-		if (designMode === true) {
-			$(".toolbox").toggle();
-			$(".btn-delGraphBlock").toggle();
-			designMode = false;
- 		}
-		else {
-			$(".toolbox").toggle();
-			$(".btn-delGraphBlock").toggle();
-			designMode = true;	
-		}
-		return false;
-	 });
-	$(document).bind('keydown', 'ctrl+g', function(){ newGraphBlock(); return false; });
-
-	$(document).bind('keydown', 'ctrl+n', function(){ addNewTab(); return false });
-}
-
-
-
-function storeItem(graphBlockId) {
-	//console.log($("#workbench-1").clone(true));
-	localStorage.setItem(graphBlockId, $("#workbench-1").html());
-}
-
-function loadFromStorage() {
-	$("#workbench-1").append(localStorage.getItem("graphBlock-1"));
-	
-}

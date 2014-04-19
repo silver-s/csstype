@@ -17,7 +17,13 @@ $( document ).ready(function() {
 		$("[id='" + fontText + "']").css("font-family", fontValueString);		
 	}
 	$("#Verdana").attr("selected","selected");
+
 	
+	if (localStorage) {
+		loadFromStorage(); 
+	}
+	
+		
 });
 
 var graphBlockCounter = 1;
@@ -120,12 +126,29 @@ function newGraphBlock() {
 	});
 
 	$("#" + graphBlockId + "-font").chosen();
+	
+	$("#" + graphBlockId + "-toolbox").find(".chosen-single").attr("id", graphBlockId + "-chosen-single");
+	$("#" + graphBlockId + "-toolbox").find(".chosen-results").attr("id", graphBlockId + "-chosen-results");
 
-	$("#" + graphBlockId + "-toolbox").find(".select-font-style").attr("id", graphBlockId + "-fontStyle");
-	$("#" + graphBlockId + "-fontStyle" ).change(function() {
-		setFontStyle( $(this).val(), graphBlockId);
+	
+	$("#" + graphBlockId + "-toolbox").find(".btn-bold").attr("id", graphBlockId + "-bold");
+	$("#" + graphBlockId + "-bold" ).click(function() {
+		$("#" + graphBlockId + "-content, #" + graphBlockId + "-chosen-results, #" + graphBlockId + "-chosen-single").toggleClass("bold");
 		updateCssCodeBox(graphBlockId);
 	});
+
+	$("#" + graphBlockId + "-toolbox").find(".btn-italic").attr("id", graphBlockId + "-italic");
+	$("#" + graphBlockId + "-italic" ).click(function() {
+		$("#" + graphBlockId + "-content, #" + graphBlockId + "-chosen-results, #" + graphBlockId + "-chosen-single").toggleClass("italic");
+		updateCssCodeBox(graphBlockId);
+	});
+
+	$("#" + graphBlockId + "-toolbox").find(".btn-underline").attr("id", graphBlockId + "-underline");
+	$("#" + graphBlockId + "-underline" ).click(function() {
+		$("#" + graphBlockId + "-content, #" + graphBlockId + "-chosen-results, #" + graphBlockId + "-chosen-single").toggleClass("underline");
+		updateCssCodeBox(graphBlockId);
+	});
+
 
 	$("#" + graphBlockId + "-toolbox").find(".btn-css").attr("id", graphBlockId + "-btnCss");
 	$("#" + graphBlockId + "-btnCss" ).click(function() {
@@ -133,7 +156,6 @@ function newGraphBlock() {
 		$("#" + graphBlockId + "-cssCode").toggle();
 	});
 
-	$("#" + graphBlockId + "-toolbox").find(".chosen-single").attr("id", graphBlockId + "-chosen-single");
 
 	// Paste detection
 	$("#" + graphBlockId + "-content").bind('paste', function(e) {
@@ -180,26 +202,54 @@ function newGraphBlock() {
 
 
 	// Position graphblock
-
-	currentTabNr = currentTab.substr(currentTab.length-1);
-	$("#" + graphBlockId).css({"top": tabGbCounter[currentTabNr-1] * 15  + "px", "left": tabGbCounter[currentTabNr-1] * 15 + 10 + "px"});
+	currentTabNr = currentTab.substr(10,currentTab.length);
+	$("#" + graphBlockId).css({"top": tabGbCounter[currentTabNr-1] * 15  + 5 + "px", "left": tabGbCounter[currentTabNr-1] * 15 + 15 + "px"});
 
 
 	makeDraggable();
 	$("#" + graphBlockId).on( "dragstart", function( event, ui ) {
 		$("#" + graphBlockId + "-toolbox").css("display", "none");
-		tabGbCounter[currentTabNr-1]--;
+		$("#" + graphBlockId + "-delBtn").css("display", "none");
+		if (tabGbCounter > 0) {
+			tabGbCounter[currentTabNr-1]--;
+		}
 	} );
 	$("#" + graphBlockId).on( "dragstop", function( event, ui ) {
-		$("#" + graphBlockId + "-toolbox").css("display", "inline");
+		if (designMode == false) {
+			$("#" + graphBlockId + "-toolbox").css("display", "inline");
+			$("#" + graphBlockId + "-delBtn").css("display", "inline");
+		}
 	} );
 
 
 	$( "#initial-instructions" ).remove();
 	graphBlockCounter++;
 	tabGbCounter[currentTabNr-1]++;
-}
+	storeItem(graphBlockId);
+/*
+	
+		$("#graphBlock-1-chosen-results").children().on( {
+    		mouseover: function() {
+        		currentFont = $("#" + graphBlockId + "-content").css("font-family");
+				$("#" + graphBlockId + "-content").css("font-family", $(this).css("font-family"));
+    		},
+    		mouseleave: function() {
+    			$(".active-result").click( function() {
+    				return false;
+    			})
+    			$("#" + graphBlockId + "-content").css("font-family", currentFont);
+    		},
+    		click: function() {
+    			$("#" + graphBlockId + "-content").css("font-family", $(this).css("font-family"));
+    			$(".active-result").stop();	
+    		}
+		});
+  */    
 
+		
+
+
+}
 function makeDraggable(tabId) {
 	if (tabId === undefined) {
 		tabId = currentTab;
@@ -217,7 +267,7 @@ function makeDraggable(tabId) {
 var currentTab = "workbench-1";
 var tabCounter = 2;
 var tabs = $( "#workarea" ).tabs({
-	active: 2,
+	active: 0,
 	activate: function( event, ui ) {
 		var active = $("#workarea").tabs("option", "active");
         currentTabHash = $("#workarea ul>li a").eq(active).attr('href');
@@ -239,12 +289,13 @@ var tabs = $( "#workarea" ).tabs({
 function addNewTab() {
 	var id = "workbench-" + tabCounter,
 	li = "<li><a href='#" + id + "'>" + tabCounter + "</a></li>";
-	tabs.find( ".ui-tabs-nav" ).append( li );
+	$("#li-copyTab").before($(li));
+	//tabs.find( ".ui-tabs-nav" ).append( li );
 	tabs.append( "<div id='" + id + "' class='workbench'></div>" );
 	tabs.tabs( "refresh" );
+	$( "#workarea" ).tabs( "option", "active", tabCounter-1);
 	tabGbCounter.push(0);
 	tabCounter++;
-	$( "#workarea" ).tabs( "option", "active", tabCounter);
 }
 
 function copyCurrentTab() {
@@ -268,9 +319,10 @@ function copyCurrentTab() {
 function updateCssCodeBox(graphBlockId) {
 	$("#" + graphBlockId + "-cssCode").html(
 		"font-family: " + $("#" + graphBlockId + "-content").css("font-family") + ";<br>" +
+		"font-size: " + $("#" + graphBlockId + "-content").css("font-size") + ";<br>" + 
 		"font-style: " + $("#" + graphBlockId + "-content").css("font-style") + ";<br>" + 
 		"font-weight: " + $("#" + graphBlockId + "-content").css("font-weight") + ";<br>" + 
-		"font-size: " + $("#" + graphBlockId + "-content").css("font-size") + ";<br>" + 
+		"text-decoration: " + $("#" + graphBlockId + "-content").css("text-decoration") + ";<br>" + 
 		"line-height: " + $("#" + graphBlockId + "-content").css("line-height") + ";<br>" + 
 		"color: " + $("#" + graphBlockId + "-fontColor").spectrum("get") + ";<br>" + 
 		"background-color: " + $("#" + graphBlockId + "-bgColor").spectrum("get") +";"
@@ -299,20 +351,6 @@ function setFont( font, graphBlockId ) {
 	$("#" + graphBlockId + "-chosen-single").css("font-family", font);
 }
 
-function setFontStyle( fontstyle, graphBlockId ) {
-	if (fontstyle === "bold italic") {
-		$("#" + graphBlockId + "-content").css("font-style", "italic");
-		$("#" + graphBlockId + "-content").css("font-weight", "bold");
-	}
-	else if (fontstyle === "bold") {
-		$("#" + graphBlockId + "-content").css("font-style", "normal");
-		$("#" + graphBlockId + "-content").css("font-weight", "bold");
-	}
-	else {
-		$("#" + graphBlockId + "-content").css("font-style", fontstyle);
-		$("#" + graphBlockId + "-content").css("font-weight", "normal");
-	}
-}
 
 var fontStack = [
 	{ value: [ "Alex Brush" ] , text: "Alex Brush" },
@@ -347,7 +385,7 @@ var fontStack = [
 /* Shortcut keys */
 
 function shortcutKeys() {
-	$(document).bind('keydown', 'ctrl+m', function(){
+	$(document).bind('keydown', 'ctrl+d', function(){
 		if (designMode === true) {
 			$(".toolbox").toggle();
 			$(".btn-delGraphBlock").toggle();
@@ -356,10 +394,23 @@ function shortcutKeys() {
 		else {
 			$(".toolbox").toggle();
 			$(".btn-delGraphBlock").toggle();
-			designMode = true;
+			designMode = true;	
 		}
+		return false;
 	 });
-	$(document).bind('keydown', 'ctrl+g', function(){ newGraphBlock(); });
-	$(document).bind('keydown', 'ctrl+x', function(){ addNewTab(); });
+	$(document).bind('keydown', 'ctrl+g', function(){ newGraphBlock(); return false; });
+
+	$(document).bind('keydown', 'ctrl+n', function(){ addNewTab(); return false });
 }
 
+
+
+function storeItem(graphBlockId) {
+	//console.log($("#workbench-1").clone(true));
+	localStorage.setItem(graphBlockId, $("#workbench-1").html());
+}
+
+function loadFromStorage() {
+	$("#workbench-1").append(localStorage.getItem("graphBlock-1"));
+	
+}

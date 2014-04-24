@@ -1,7 +1,5 @@
 $( document ).ready(function() {
-	//makeDraggable();
 	shortcutKeys();
-
 	designMode = new Boolean(false);
 		
 	// Add fonts to the select box
@@ -16,12 +14,10 @@ $( document ).ready(function() {
 		$("#select-font-hidden").append("<option id='" + fontText + "' value='" + fontValue + "'>" + fontText + "</option>");
 		$("[id='" + fontText + "']").css("font-family", fontValueString);		
 	}
-	$("#Verdana").attr("selected","selected");
-
-	if (localStorage) {	loadFromStorage(); }
 	
-		
+	if (localStorage.length > 0) { loadFromStorage(); }
 });
+
 
 var graphBlockCounter = 1;
 var tabGbCounter = [0]; // Count graphblocks per tab for positioning
@@ -59,26 +55,7 @@ function newGraphBlock() {
 	graphBlockCounter++;
 	tabGbCounter[currentTabNr-1]++;
 	$( "#initial-instructions" ).remove();
-
-	
-	
-	/*$("#graphBlock-1-chosen-results").children().on( {
-    		mouseover: function() {
-        		currentFont = $("#" + graphBlockId + "-content").css("font-family");
-				$("#" + graphBlockId + "-content").css("font-family", $(this).css("font-family"));
-    		},
-    		mouseleave: function() {
-    			$(".active-result").click( function() {
-    				return false;
-    			})
-    			$("#" + graphBlockId + "-content").css("font-family", currentFont);
-    		},
-    		click: function() {
-    			$("#" + graphBlockId + "-content").css("font-family", $(this).css("font-family"));
-    			$(".active-result").stop();	
-    		}
-		});
- 	 */    
+    
 }
 
 
@@ -122,7 +99,6 @@ function addNewTab() {
 	var id = "workbench-" + tabCounter,
 	li = "<li><a href='#" + id + "'>" + tabCounter + "</a></li>";
 	$("#li-copyTab").before($(li));
-	//tabs.find( ".ui-tabs-nav" ).append( li );
 	tabs.append( "<div id='" + id + "' class='workbench'></div>" );
 	tabs.tabs( "refresh" );
 	$( "#workarea" ).tabs( "option", "active", tabCounter-1);
@@ -271,20 +247,17 @@ function setEventHandlers(graphBlockId) {
 
 	var graphBlockFont = $("#" + graphBlockId + "-content").css("font-family").split(",");
 	graphBlockFont = graphBlockFont[0];
-	$("#" + graphBlockId + "-font").find("#Verdana").removeAttr("selected");
-	$("#" + graphBlockId + "-font").find("option[id='" + graphBlockFont + "']").attr("selected", "selected");
+	$("#" + graphBlockId + "-font > option[id=" + graphBlockFont + "]").attr("selected", true);
 
 	$("#" + graphBlockId + "-font").chosen({width: "100%"});
 	
 	$("#" + graphBlockId + "-toolbox").find(".chosen-single").attr("id", graphBlockId + "-chosen-single");
 	$("#" + graphBlockId + "-toolbox").find(".chosen-results").attr("id", graphBlockId + "-chosen-results");
-	$("#" + graphBlockId + "-chosen-results, #" + graphBlockId + "-chosen-single").css({
-		"font-weight": $("#" + graphBlockId + "-content").css("font-weight"),
-		"text-decoration": $("#" + graphBlockId + "-content").css("text-decoration"),
-		"font-style": $("#" + graphBlockId + "-content").css("font-style"),
-		"font-family": $("#" + graphBlockId + "-content").css("font-family")
-	});
-
+	$("#" + graphBlockId + "-chosen-results, #" + graphBlockId + "-chosen-single").css({ "font-family": $("#" + graphBlockId + "-content").css("font-family") });
+	if ($("#" + graphBlockId + "-content").hasClass("bold")) { $("#" + graphBlockId + "-chosen-results, #" + graphBlockId + "-chosen-single").addClass("bold"); }
+	if ($("#" + graphBlockId + "-content").hasClass("italic")) { $("#" + graphBlockId + "-chosen-results, #" + graphBlockId + "-chosen-single").addClass("italic"); }
+	if ($("#" + graphBlockId + "-content").hasClass("underline")) { $("#" + graphBlockId + "-chosen-results, #" + graphBlockId + "-chosen-single").addClass("underline"); }
+	
 	$("#" + graphBlockId + "-toolbox").find(".btn-bold").attr("id", graphBlockId + "-bold");
 	$("#" + graphBlockId + "-bold" ).click(function() {
 		$("#" + graphBlockId + "-content, #" + graphBlockId + "-chosen-results, #" + graphBlockId + "-chosen-single").toggleClass("bold");
@@ -348,6 +321,26 @@ function setEventHandlers(graphBlockId) {
 			$("#" + graphBlockId + "-toolbox").css("display", "inline");
 		}
 	});
+
+	// Swith graphblock font on hover
+	$("#" + graphBlockId + "-toolbox").find(".toolbox-bottombar").attr("id", graphBlockId + "-toolbox-bottombar");
+	$("#" + graphBlockId + "-toolbox-bottombar").click(function() {
+		var currentFont = $("#" + graphBlockId + "-content").css("font-family");
+		var selectedFont;
+		$(".active-result").on( {
+			click: function() {
+				$("#" + graphBlockId + "-content").css("font-family", selectedFont);
+	    	},
+	    	mouseover: function() {
+	        	selectedFont = $(this).css("font-family");
+				$("#" + graphBlockId + "-content").css("font-family", selectedFont);
+	    	},
+	    	mouseleave: function() {
+	    		$("#" + graphBlockId + "-content").css("font-family", currentFont);
+	    	}
+    	});
+	});
+
 }
 
 
@@ -370,6 +363,8 @@ function shortcutKeys() {
 	$(document).bind('keydown', 'ctrl+g', function(){ newGraphBlock(); return false; });
 
 	$(document).bind('keydown', 'ctrl+n', function(){ addNewTab(); return false });
+
+	$(document).bind('keydown', 'ctrl+s', function(){ saveToStorage(); return false });
 }
 
 
@@ -385,18 +380,19 @@ function saveToStorage() {
 function loadFromStorage() {
 	$( "#initial-instructions" ).remove();
 
+	$("#workbench-1").append(localStorage.getItem("workbench-1"));
+	makeDraggable("workbench-1");
+
 	var tabId;
-	for (var i = 0; i < localStorage.length; i++) {
-		tabId = localStorage.key(i);
-		if ($("#" + tabId).length > 0) {
-			$("#" + tabId).append(localStorage.getItem(localStorage.key(i)));
-		}
-		else {
+	if (localStorage.length > 1) {
+		for (var i = 2; i != localStorage.length + 1; i++) {
+			tabId = "workbench-" + i;
 			addNewTab();
-			$("#" + tabId).append(localStorage.getItem(localStorage.key(i)));
+			$("#" + tabId).append(localStorage.getItem(tabId));
+			makeDraggable(tabId);
 		}
-		makeDraggable(tabId);
 	}
+
 	$("#workarea").tabs( "option", "active", 0 );
 
 	var graphBlocks = ($(".graphBlock"));
@@ -410,9 +406,6 @@ function loadFromStorage() {
 		setEventHandlers(graphBlockId);
 		graphBlockCounter++;
 	}
-
-	
-
 }
 
 

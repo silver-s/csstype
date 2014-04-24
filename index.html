@@ -25,6 +25,9 @@
 				<i id="saveSpinner" class="fa fa-spinner fa-spin"></i>
 			</span>
 			<span id="header-text-right">
+				<span id="header-baseFontSize">
+					<p id="baseFontSizeUnits">Base font size: <input type='number' id="baseFontSize" min="1" step="1" value="10" /> px</p>
+				</span>
 				<p>Ctrl+N - Create new worksheet<br>Ctrl+G - Add new Graphic block<br>Ctrl+D - Toggle design mode<br>Ctrl+S - Save progress</p>
 			</span>
 			<span id="header-logo">
@@ -59,11 +62,11 @@
 			<button type='button' class="btn-bold btn-fontstyle"><i class="fa fa-bold"></i></button>
 			<button type='button' class="btn-italic btn-fontstyle"><i class="fa fa-italic"></i></button>
 			<button type='button' class="btn-underline btn-fontstyle"><i class="fa fa-underline"></i></button>
-			<input type='number' class="gb-num-input" id="gb-font-size" value="16" />
-			<input type='number' class="gb-num-input" id="gb-line-height" value="32" />
+			<input type='number' class="gb-num-input" id="gb-font-size" min="0.1" step="0.1" value="1.6" title="Font size (em)" />
+			<input type='number' class="gb-num-input" id="gb-line-height" min="0.1" step="0.1" value="2" title="Line height (em)" />
 			<input type='text' class="gb-bg-color" />
-			<button type='button' class="btn-css"><i class="fa fa-code"></i></button>
-			<span class="btn-delGraphBlock"><i class="fa fa-times"></i></span>
+			<button type='button' class="btn-css" title="Show CSS"><i class="fa fa-code"></i></button>
+			<span class="btn-delGraphBlock" title="Delete graphblock"><i class="fa fa-times"></i></span>
 		</div>
 		<div class="toolbox-bottombar">
 			<select name="font" class="select-font" id="select-font-hidden"></select>

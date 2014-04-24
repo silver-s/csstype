@@ -1,6 +1,7 @@
 $( document ).ready(function() {
 	shortcutKeys();
 	designMode = new Boolean(false);
+	$(".workbench").css({"height": 0.84 * screen.height, "max-height": 0.84 * screen.height});
 		
 	// Add fonts to the select box
 	for (var i = 0; i < fontStack.length; i++) {
@@ -18,10 +19,19 @@ $( document ).ready(function() {
 	if (localStorage.length > 0) { loadFromStorage(); }
 });
 
-
 var graphBlockCounter = 1;
 var tabGbCounter = [0]; // Count graphblocks per tab for positioning
 var zindexCounter = 0;
+var baseFontSize = 10;
+
+$("#baseFontSize").change(function() {
+	setBaseFontSize($(this).val());
+});
+
+function setBaseFontSize(newBaseFontSize) {
+	$(".workbench").css("font-size", newBaseFontSize + "px");
+	baseFontSize = newBaseFontSize;
+}
 
 function newGraphBlock() {
 	var graphBlockId = "graphBlock-" + graphBlockCounter;
@@ -127,11 +137,11 @@ function copyCurrentTab() {
 function updateCssCodeBox(graphBlockId) {
 	$("#" + graphBlockId + "-cssCode").html(
 		"font-family: " + $("#" + graphBlockId + "-content").css("font-family") + ";<br>" +
-		"font-size: " + $("#" + graphBlockId + "-content").css("font-size") + ";<br>" + 
+		"font-size: " + $("#" + graphBlockId + "-fontSize").val() + "em;<br>" + 
 		"font-style: " + $("#" + graphBlockId + "-content").css("font-style") + ";<br>" + 
 		"font-weight: " + $("#" + graphBlockId + "-content").css("font-weight") + ";<br>" + 
 		"text-decoration: " + $("#" + graphBlockId + "-content").css("text-decoration") + ";<br>" + 
-		"line-height: " + $("#" + graphBlockId + "-content").css("line-height") + ";<br>" + 
+		"line-height: " + $("#" + graphBlockId + "-lineHeight").val() + "em;<br>" + 
 		"color: " + $("#" + graphBlockId + "-fontColor").spectrum("get") + ";<br>" + 
 		"background-color: " + $("#" + graphBlockId + "-bgColor").spectrum("get") +";"
 	);
@@ -147,11 +157,11 @@ function setBgColor(color, graphBlockId) {
 };
 
 function setFontSize( size, graphBlockId ) {
-	$("#" + graphBlockId + "-content").css("font-size", size + "px");
+	$("#" + graphBlockId + "-content").css("font-size", size + "em");
 }
 
 function setLineHeight( height, graphBlockId ) {
-	$("#" + graphBlockId + "-content").css("line-height", height + "px");
+	$("#" + graphBlockId + "-content").css("line-height", height + "em");
 }
 
 function setFont( font, graphBlockId ) {
@@ -226,6 +236,8 @@ function setEventHandlers(graphBlockId) {
 		}
 	});
 
+	$("#" + graphBlockId + "-toolbox").find(".spectrum-font").attr("title", "Font color");
+	$("#" + graphBlockId + "-toolbox").find(".spectrum-bg").attr("title", "Background color");
 
 	$("#" + graphBlockId + "-toolbox").find("#gb-font-size").attr("id", graphBlockId + "-fontSize");
 	$("#" + graphBlockId + "-fontSize" ).change(function() {
@@ -282,14 +294,6 @@ function setEventHandlers(graphBlockId) {
 		updateCssCodeBox(graphBlockId);
 		$("#" + graphBlockId + "-cssCode").toggle();
 	});
-
-
-	// Paste detection
-	$("#" + graphBlockId + "-content").bind('paste', function(e) {
-		var pastedText = e.originalEvent.clipboardData.getData('Text');
-        $("#" + graphBlockId + "-content").append(pastedText);
-        return false;
-    });
 
 
 	// GraphBlock delete button
@@ -374,6 +378,7 @@ function saveToStorage() {
 	for (var i = 1; i < tabCounter; i++ ) {
 		localStorage.setItem("workbench-" + i, $("#workbench-" + i).html());
 	}
+	localStorage.setItem("baseFontSize", baseFontSize);
 	setTimeout(function(){ $("#saveSpinner").css("display", "none") },900);
 }
 
@@ -382,10 +387,9 @@ function loadFromStorage() {
 
 	$("#workbench-1").append(localStorage.getItem("workbench-1"));
 	makeDraggable("workbench-1");
-
 	var tabId;
 	if (localStorage.length > 1) {
-		for (var i = 2; i != localStorage.length + 1; i++) {
+		for (var i = 2; i != localStorage.length; i++) {
 			tabId = "workbench-" + i;
 			addNewTab();
 			$("#" + tabId).append(localStorage.getItem(tabId));
@@ -406,6 +410,8 @@ function loadFromStorage() {
 		setEventHandlers(graphBlockId);
 		graphBlockCounter++;
 	}
+	setBaseFontSize(localStorage.getItem("baseFontSize"));
+	$("#baseFontSize").val(baseFontSize);
 }
 
 
@@ -427,7 +433,7 @@ var fontStack = [
 	{ value: [ "Geneva", "Tahoma", "Verdana", "sans-serif" ], text: "Geneva" },
 	{ value: [ "Gill Sans", "Gill Sans MT", "Calibri", "sans-serif" ], text: "Gill Sans" },
 	{ value: [ "Georgia" ], text: "Georgia" },
-	{ value: [ "Helvetica Neue", "Helvetica", "Arial", "sans-serif" ], text: "Helvetica" },
+	{ value: [ "Helvetica", "Helvetica Neue", "Arial", "sans-serif" ], text: "Helvetica" },
 	{ value: [ "Impact", "Haettenschweiler", "Franklin Gothic Bold", "Charcoal", "Helvetica Inserat", "Bitstream Vera Sans Bold", "Arial Black", "sans serif" ], text: "Impact" },
 	{ value: [ "Parisienne" ], text: "Parisienne" },
 	{ value: [ "Segoe UI", "Frutiger", "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", "Arial", "sans-serif" ], text: "Segoe UI" },

@@ -65,21 +65,34 @@
 			<input type='number' class="gb-num-input" id="gb-font-size" min="0.1" step="0.1" value="1.6" title="Font size (em)" />
 			<input type='number' class="gb-num-input" id="gb-line-height" min="0.1" step="0.1" value="2" title="Line height (em)" />
 			<input type='text' class="gb-bg-color" />
-			<button type='button' class="btn-css" title="Show CSS"><i class="fa fa-code"></i></button>
+			<button type='button' class="btn-css" title="Show CSS code"><i class="fa fa-code"></i></button>
 			<span class="btn-delGraphBlock" title="Delete graphblock"><i class="fa fa-times"></i></span>
 		</div>
 		<div class="toolbox-bottombar">
 			<select name="font" class="select-font" id="select-font-hidden"></select>
+			<button type='button' class="btn-newFont" title="Add a new font"><i class="fa fa-plus"></i></button>
 		</div>
 		<span id="cssCodeTemplate" class="css-code hidden" style="display: none;"></span>
 	</div>
+	<div id="newFontDialog" class="hidden">
+		<div id="newFontOverlay"></div>
+		<div id="newFontContent">
+				<div id="header-newFont">
+					<h1>Add new font</h1>
+				</div>
+				<p>Font family separated by commas or link to a Google font:</p>
+				<input id="input-font" type="text" name="fontName"><br>
+				<button id="newFont-add" class="newFont-control">Add</button>
+				<button id="newFont-cancel" class="newFont-control">Cancel</button>
+		</div>
+	</div>
+
+	<script src="js/jquery-1.10.2.js"></script>
+	<script src="js/jquery-ui.js"></script>
+	<script src="js/jquery.hotkeys.js"></script>
+	<script src="js/spectrum.js"></script>
+	<script src="js/chosen.jquery.js"></script>
+	<script src="js/script.js"></script>
+	
 </body>
-
-<script src="js/jquery-1.10.2.js"></script>
-<script src="js/jquery-ui.js"></script>
-<script src="js/jquery.hotkeys.js"></script>
-<script src="js/spectrum.js"></script>
-<script src="js/chosen.jquery.js"></script>
-<script src="js/script.js"></script>
-
 </html> 

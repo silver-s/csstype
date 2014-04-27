@@ -1,8 +1,7 @@
 $( document ).ready(function() {
 	shortcutKeys();
 	designMode = new Boolean(false);
-	$(".workbench").css({"height": 0.84 * screen.height, "max-height": 0.84 * screen.height});
-		
+	setWorkbenchHeight();
 	// Add fonts to the select box
 	for (var i = 0; i < fontStack.length; i++) {
 		var fontText = fontStack[i]['text'];
@@ -27,6 +26,10 @@ var baseFontSize = 10;
 $("#baseFontSize").change(function() {
 	setBaseFontSize($(this).val());
 });
+
+function setWorkbenchHeight() {
+	$(".workbench").css({"height": 0.84 * screen.height, "max-height": 0.84 * screen.height});
+}
 
 function setBaseFontSize(newBaseFontSize) {
 	$(".workbench").css("font-size", newBaseFontSize + "px");
@@ -114,6 +117,7 @@ function addNewTab() {
 	$( "#workarea" ).tabs( "option", "active", tabCounter-1);
 	tabGbCounter.push(0);
 	tabCounter++;
+	setWorkbenchHeight();
 }
 
 function copyCurrentTab() {
@@ -240,12 +244,20 @@ function setEventHandlers(graphBlockId) {
 	$("#" + graphBlockId + "-toolbox").find(".spectrum-bg").attr("title", "Background color");
 
 	$("#" + graphBlockId + "-toolbox").find("#gb-font-size").attr("id", graphBlockId + "-fontSize");
-	$("#" + graphBlockId + "-fontSize" ).change(function() {
+	var fontSize = document.getElementById(graphBlockId + "-content").style.fontSize;
+	if (fontSize != "") {
+		$("#" + graphBlockId + "-fontSize").val(fontSize.substring(0, fontSize.length - 2));
+	}
+	$("#" + graphBlockId + "-fontSize").change(function() {
 		setFontSize( $(this).val(), graphBlockId);
 		updateCssCodeBox(graphBlockId);
 	});
 
 	$("#" + graphBlockId + "-toolbox").find("#gb-line-height").attr("id", graphBlockId + "-lineHeight");
+	var lineHeight = document.getElementById(graphBlockId + "-content").style.lineHeight;
+	if (lineHeight != "") {
+		$("#" + graphBlockId + "-lineHeight").val(lineHeight.substring(0, lineHeight.length - 2));
+	}
 	$("#" + graphBlockId + "-lineHeight" ).change(function() {
 		setLineHeight( $(this).val(), graphBlockId);
 		updateCssCodeBox(graphBlockId);
@@ -261,7 +273,7 @@ function setEventHandlers(graphBlockId) {
 	graphBlockFont = graphBlockFont[0];
 	$("#" + graphBlockId + "-font > option[id=" + graphBlockFont + "]").attr("selected", true);
 
-	$("#" + graphBlockId + "-font").chosen({width: "100%"});
+	$("#" + graphBlockId + "-font").chosen({width: "88%"});
 	
 	$("#" + graphBlockId + "-toolbox").find(".chosen-single").attr("id", graphBlockId + "-chosen-single");
 	$("#" + graphBlockId + "-toolbox").find(".chosen-results").attr("id", graphBlockId + "-chosen-results");
@@ -299,6 +311,71 @@ function setEventHandlers(graphBlockId) {
 	// GraphBlock delete button
 	$("#" + graphBlockId + "-delBtn").click(function() {
 		$("#" + graphBlockId).remove();
+	});
+
+
+	// Add new font button
+	$(".btn-newFont").click(function() {
+		$("#newFontDialog").zIndex(zindexCounter);
+		$("#newFontOverlay").zIndex(zindexCounter);
+		$("#newFontContent").zIndex(zindexCounter);
+		$("#newFontDialog").removeClass("hidden");
+		zindexCounter++;
+
+		$("#newFontOverlay").mouseup(function() {
+    		$("#newFontDialog").addClass("hidden");
+    	});
+
+	});
+
+	$("#newFont-add").click(function() {
+		var newFont = $("#input-font").val();
+		if (isUrl(newFont)) {
+			var newFontUrl = newFont;
+			var fontNameSplit = newFont.split("=");
+			fontNameSplit = fontNameSplit[1].split(":");
+			fontNameSplit = fontNameSplit[0].split("+");
+			newFont = "";
+			for (var i=0; i < fontNameSplit.length; i++ ) {
+				newFont += fontNameSplit[i] +" ";
+			}
+			newFont = newFont.substring(0, newFont.length-1);
+
+			importGoogleFont(newFontUrl);
+
+			customFonts.push([[newFont], newFont]);
+			googleFontURLs.push(newFontUrl);
+
+			$(".select-font").append("<option id='" + newFont + "' value='" + newFont + "'>" + newFont + "</option>");
+			$("[id='" + newFont + "']").css("font-family", "\"" + newFont + "\"");
+			
+		}
+		else {
+			var newFontSplit = newFont.split(/(,\s|,)/g);
+			var values = [];
+			for (var i=0; i < newFontSplit.length; i++) {
+				if (newFontSplit[i] != ", " && newFontSplit[i] != ",") {
+					values.push("\"" + newFontSplit[i] + "\"");
+				}
+			}
+			newFontText = newFontSplit[0];
+			var customFont = [ values, newFontText ];
+			customFonts.push(customFont);
+
+			$(".select-font").append("<option id='" + newFontText + "' value='" + newFont + "'>" + newFontText + "</option>");
+			$("[id='" + newFontText + "']").css("font-family", values);
+		}
+	
+
+		$(".select-font").trigger("chosen:updated");
+		$("#newFontDialog").addClass("hidden");
+		$("#input-font").val('');
+		
+	});
+
+	$("#newFont-cancel").click(function() {
+		$("#newFontDialog").addClass("hidden");
+		$("#input-font").val('');
 	});
 
 
@@ -348,6 +425,14 @@ function setEventHandlers(graphBlockId) {
 }
 
 
+// Validate URL http://dzone.com/snippets/validate-url-regexp
+
+function isUrl(s) {
+	var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+	return regexp.test(s);
+}
+
+
 /* Shortcut keys */
 
 function shortcutKeys() {
@@ -371,7 +456,13 @@ function shortcutKeys() {
 	$(document).bind('keydown', 'ctrl+s', function(){ saveToStorage(); return false });
 }
 
-
+function importGoogleFont(url) {
+	var newLink=document.createElement("link");
+	newLink.setAttribute("href", url);
+	newLink.setAttribute("rel", "stylesheet");
+	newLink.setAttribute("type", "text/css");
+	document.getElementsByTagName("head")[0].appendChild(newLink);
+}
 
 function saveToStorage() {
 	$("#saveSpinner").css("display", "inline-block");
@@ -379,11 +470,43 @@ function saveToStorage() {
 		localStorage.setItem("workbench-" + i, $("#workbench-" + i).html());
 	}
 	localStorage.setItem("baseFontSize", baseFontSize);
+	if (customFonts.length > 0) {
+		localStorage.setItem("customFonts", JSON.stringify(customFonts));
+
+		if (googleFontURLs.length > 0) {
+			localStorage.setItem("googleFontURLs", JSON.stringify(googleFontURLs));
+		}
+	}
 	setTimeout(function(){ $("#saveSpinner").css("display", "none") },900);
 }
 
 function loadFromStorage() {
 	$( "#initial-instructions" ).remove();
+
+	// Load any custom fonts
+	if (localStorage.getItem("customFonts") != null) {
+		if (localStorage.getItem("googleFontURLs") != null) {
+			googleFontURLs = JSON.parse(localStorage.getItem("googleFontURLs"));
+			for (var m = 0; m < googleFontURLs.length; m++) {
+				importGoogleFont(googleFontURLs[m]);
+			}
+		}
+
+		customFonts = JSON.parse(localStorage.getItem("customFonts"));
+
+		for (var k = 0; k < customFonts.length; k++) {
+			var fontText = customFonts[k][1];
+			var fontValues = customFonts[k][0];
+			var fontValueString = "";
+			for (var l = 0; l < fontValues.length; l++) {
+				fontValueString += "\"" + fontValues[l] +"\", " ;
+			}
+			fontValueString = fontValueString.substring(0, fontValueString.length - 2);
+			$(".select-font").append("<option id='" + fontText + "' value='" + fontValues + "'>" + fontText + "</option>");
+			$("[id='" + fontText + "']").css("font-family", fontValueString);		
+		}
+	}
+
 
 	$("#workbench-1").append(localStorage.getItem("workbench-1"));
 	makeDraggable("workbench-1");
@@ -391,9 +514,15 @@ function loadFromStorage() {
 	if (localStorage.length > 1) {
 		for (var i = 2; i != localStorage.length; i++) {
 			tabId = "workbench-" + i;
-			addNewTab();
-			$("#" + tabId).append(localStorage.getItem(tabId));
-			makeDraggable(tabId);
+			
+			if (localStorage.getItem(tabId) != null) {
+				addNewTab();
+				$("#" + tabId).append(localStorage.getItem(tabId));
+				makeDraggable(tabId);
+			}
+			else {
+				break;
+			}
 		}
 	}
 
@@ -412,9 +541,11 @@ function loadFromStorage() {
 	}
 	setBaseFontSize(localStorage.getItem("baseFontSize"));
 	$("#baseFontSize").val(baseFontSize);
+
 }
 
-
+var customFonts = [];
+var googleFontURLs = [];
 var fontStack = [
 	{ value: [ "Alex Brush" ] , text: "Alex Brush" },
 	{ value: [ "Arial", "Helvetica Neue", "Helvetica", "sans-serif" ], text: "Arial" },

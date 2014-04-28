@@ -2,7 +2,6 @@
 <html>
 
 <head>
-	<meta charset="UTF-8">
 	<title>CssTYPE</title>
 	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
@@ -24,15 +23,15 @@
 				<button type="button" id="btn-save" onclick="saveToStorage()"><i class="fa fa-floppy-o"></i> SAVE </button>
 				<i id="saveSpinner" class="fa fa-spinner fa-spin"></i>
 			</span>
-			<span id="header-text-right">
-				<span id="header-baseFontSize">
-					<p id="baseFontSizeUnits">Base font size: <input type='number' id="baseFontSize" min="1" step="1" value="10" /> px</p>
-				</span>
+			<div id="header-text-right">
 				<p>Ctrl+N - Create new worksheet<br>Ctrl+G - Add new Graphic block<br>Ctrl+D - Toggle design mode<br>Ctrl+S - Save progress</p>
-			</span>
-			<span id="header-logo">
+				<div id="header-baseFontSize">
+					<p id="baseFontSizeUnits">Base font size: <input type='number' id="baseFontSize" min="1" step="1" value="10" /> px</p>
+				</div>
+			</div>
+			<div id="header-logo">
 				<h1 id="text-Css">Css</h1><h1 id="text-TYPE">TYPE</h1>
-			</span>
+			</div>
 			<span id="button-bar">
 				<button id="btn-newGraphBlock" type="button" onclick="newGraphBlock()">G</button>
 			</span>
@@ -46,10 +45,10 @@
 			</ul>
 			
 			<div id="workbench-1" class="workbench">
-				<span id="initial-instructions">
+				<div id="initial-instructions">
 					<h4 id="text-instructions-1">Press the green "G" or Ctrl+G</h4>
 					<h5 id="text-instructions-2">to create a new graphic block</h5>
-				</span>				
+				</div>				
 			</div>
 			<!-- For jQuery UI tabs -->
 			<div id="copyCurrentTab"></div>

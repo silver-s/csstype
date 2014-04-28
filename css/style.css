@@ -34,7 +34,8 @@ body {
 
 #header-logo {
 	font-size: 160%;
-	width: 50%;
+	width: 20%;
+	display: inline;
 }
 
 #text-Css {
@@ -51,7 +52,7 @@ body {
 
 #header-save {
 	margin-left: 2%;
-	width:23%;
+	width:38%;
 	float: left;
 }
 
@@ -92,7 +93,7 @@ body {
 	margin-right: 2%;
 	color: #fff;
 	font-size: 90%;
-	width: 23%;
+	width: 38%;
 }
 
 #header-text-right p {
@@ -105,7 +106,7 @@ body {
   text-align: center;
   background-color: #34a772;
   padding-bottom: 6px;
-  width: 50%;
+  width: 20%;
 }
 
 #btn-newGraphBlock {
@@ -305,8 +306,9 @@ body {
 }
 
 #header-baseFontSize {
-	float:left;
+	float:right;
 	margin-top: 20px;
+	margin-right: 14%;
 }
 
 .btn-newFont {

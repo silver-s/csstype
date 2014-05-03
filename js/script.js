@@ -1,6 +1,6 @@
 $( document ).ready(function() {
 	shortcutKeys();
-	designMode = new Boolean(false);
+	designMode = new Boolean(true);
 	setWorkbenchHeight();
 	// Add fonts to the select box
 	for (var i = 0; i < fontStack.length; i++) {
@@ -146,6 +146,9 @@ function updateCssCodeBox(graphBlockId) {
 		"font-weight: " + $("#" + graphBlockId + "-content").css("font-weight") + ";<br>" + 
 		"text-decoration: " + $("#" + graphBlockId + "-content").css("text-decoration") + ";<br>" + 
 		"line-height: " + $("#" + graphBlockId + "-lineHeight").val() + "em;<br>" + 
+		"letter-spacing: " + $("#" + graphBlockId + "-lspacing").val() + "em;<br>" + 
+		"width: " + $("#" + graphBlockId + "-width").val() + "%;<br>" +
+		"padding: " + $("#" + graphBlockId + "-padding-top").val() + "em " + $("#" + graphBlockId + "-padding-right").val() + "em " + $("#" + graphBlockId + "-padding-bottom").val() + "em " + $("#" + graphBlockId + "-padding-left").val() +"em;<br>" +
 		"color: " + $("#" + graphBlockId + "-fontColor").spectrum("get") + ";<br>" + 
 		"background-color: " + $("#" + graphBlockId + "-bgColor").spectrum("get") +";"
 	);
@@ -181,10 +184,11 @@ function setEventHandlers(graphBlockId) {
 	$( "#" + graphBlockId ).children("#toolboxTemplate").attr({ id: graphBlockId + "-toolbox", class: "toolbox" });
 	$( "#" + graphBlockId + "-toolbox" ).css("display", "inline");
 	$( "#" + graphBlockId + "-toolbox").find("#cssCodeTemplate").attr({ id: graphBlockId + "-cssCode", class: "css-code hidden" });
+	$( "#" + graphBlockId + "-toolbox").find(".toolbox-additional").attr("id", graphBlockId + "-additional");
 	$( "#" + graphBlockId + "-toolbox").find(".btn-delGraphBlock").attr("id", graphBlockId + "-delBtn");
 	
 	// Hide toolbox if in design mode
-	if (designMode === true) { 
+	if (designMode == false) { 
 		$("#" + graphBlockId + "-toolbox").css("display", "none");
 	}
 
@@ -245,9 +249,7 @@ function setEventHandlers(graphBlockId) {
 
 	$("#" + graphBlockId + "-toolbox").find("#gb-font-size").attr("id", graphBlockId + "-fontSize");
 	var fontSize = document.getElementById(graphBlockId + "-content").style.fontSize;
-	if (fontSize != "") {
-		$("#" + graphBlockId + "-fontSize").val(fontSize.substring(0, fontSize.length - 2));
-	}
+	if (fontSize != "") { $("#" + graphBlockId + "-fontSize").val(fontSize.substring(0, fontSize.length - 2)); }
 	$("#" + graphBlockId + "-fontSize").change(function() {
 		setFontSize( $(this).val(), graphBlockId);
 		updateCssCodeBox(graphBlockId);
@@ -255,9 +257,7 @@ function setEventHandlers(graphBlockId) {
 
 	$("#" + graphBlockId + "-toolbox").find("#gb-line-height").attr("id", graphBlockId + "-lineHeight");
 	var lineHeight = document.getElementById(graphBlockId + "-content").style.lineHeight;
-	if (lineHeight != "") {
-		$("#" + graphBlockId + "-lineHeight").val(lineHeight.substring(0, lineHeight.length - 2));
-	}
+	if (lineHeight != "") {	$("#" + graphBlockId + "-lineHeight").val(lineHeight.substring(0, lineHeight.length - 2)); }
 	$("#" + graphBlockId + "-lineHeight" ).change(function() {
 		setLineHeight( $(this).val(), graphBlockId);
 		updateCssCodeBox(graphBlockId);
@@ -273,7 +273,7 @@ function setEventHandlers(graphBlockId) {
 	graphBlockFont = graphBlockFont[0];
 	$("#" + graphBlockId + "-font > option[id=" + graphBlockFont + "]").attr("selected", true);
 
-	$("#" + graphBlockId + "-font").chosen({width: "88%"});
+	$("#" + graphBlockId + "-font").chosen();
 	
 	$("#" + graphBlockId + "-toolbox").find(".chosen-single").attr("id", graphBlockId + "-chosen-single");
 	$("#" + graphBlockId + "-toolbox").find(".chosen-results").attr("id", graphBlockId + "-chosen-results");
@@ -379,6 +379,61 @@ function setEventHandlers(graphBlockId) {
 	});
 
 
+	// Additional toolbar
+	$("#" + graphBlockId + "-toolbox").find("#gb-padding-top").attr("id", graphBlockId + "-padding-top");
+	var paddingTop = document.getElementById(graphBlockId + "-content").style.paddingTop;
+	if (paddingTop != "") { $("#" + graphBlockId + "-padding-top").val(paddingTop.substring(0, paddingTop.length-2)); }
+	$("#" + graphBlockId + "-padding-top").change(function() {
+		$("#" + graphBlockId + "-content").css("padding-top", $(this).val() + "em");
+		updateCssCodeBox(graphBlockId);
+	});
+
+	$("#" + graphBlockId + "-toolbox").find("#gb-padding-right").attr("id", graphBlockId + "-padding-right");
+	var paddingRight = document.getElementById(graphBlockId + "-content").style.paddingRight;
+	if (paddingRight != "") { $("#" + graphBlockId + "-padding-right").val(paddingRight.substring(0, paddingRight.length-2)); }
+	$("#" + graphBlockId + "-padding-right" ).change(function() {
+		$("#" + graphBlockId + "-content").css("padding-right", $(this).val() + "em");
+		updateCssCodeBox(graphBlockId);
+	});
+
+	$("#" + graphBlockId + "-toolbox").find("#gb-padding-bottom").attr("id", graphBlockId + "-padding-bottom");
+	var paddingBottom = document.getElementById(graphBlockId + "-content").style.paddingBottom;
+	if (paddingBottom != "") { $("#" + graphBlockId + "-padding-bottom").val(paddingBottom.substring(0, paddingBottom.length-2)); }
+	$("#" + graphBlockId + "-padding-bottom" ).change(function() {
+		$("#" + graphBlockId + "-content").css("padding-bottom", $(this).val() + "em");
+		updateCssCodeBox(graphBlockId);
+	});
+
+	$("#" + graphBlockId + "-toolbox").find("#gb-padding-left").attr("id", graphBlockId + "-padding-left");
+	var paddingLeft = document.getElementById(graphBlockId + "-content").style.paddingLeft;
+	if (paddingLeft != "") { $("#" + graphBlockId + "-padding-left").val(paddingLeft.substring(0, paddingLeft.length-2)); }
+	$("#" + graphBlockId + "-padding-left" ).change(function() {
+		$("#" + graphBlockId + "-content").css("padding-left", $(this).val() + "em");
+		updateCssCodeBox(graphBlockId);
+	});
+
+	$("#" + graphBlockId + "-toolbox").find("#gb-width").attr("id", graphBlockId + "-width");
+	var graphBlockWidth = document.getElementById(graphBlockId).style.width;
+	if (graphBlockWidth != "") { $("#" + graphBlockId + "-width").val(graphBlockWidth.substring(0, graphBlockWidth.length-1)); }
+	$("#" + graphBlockId + "-width" ).change(function() {
+		$("#" + graphBlockId).css("width", $(this).val() + "%");
+		updateCssCodeBox(graphBlockId);
+	});
+
+	$("#" + graphBlockId + "-toolbox").find("#gb-lspacing").attr("id", graphBlockId + "-lspacing");
+	var graphLetterSpacing = document.getElementById(graphBlockId + "-content").style.letterSpacing;
+	if (graphLetterSpacing != "") { $("#" + graphBlockId + "-lspacing").val(graphLetterSpacing.substring(0, graphLetterSpacing.length-2)); }
+	$("#" + graphBlockId + "-lspacing" ).change(function() {
+		$("#" + graphBlockId + "-content").css("letter-spacing", $(this).val() + "em");
+		updateCssCodeBox(graphBlockId);
+	});
+
+	$("#" + graphBlockId + "-toolbox").find(".btn-additional").attr("id", graphBlockId + "-btnAdditional");
+	$("#" + graphBlockId + "-btnAdditional" ).click(function() {
+		$("#" + graphBlockId + "-additional").toggle();
+	});
+
+
 	// Zindex
 	$("#" + graphBlockId).zIndex(zindexCounter);
 	zindexCounter++;
@@ -398,10 +453,11 @@ function setEventHandlers(graphBlockId) {
 	});
 
 	$("#" + graphBlockId).on( "dragstop", function( event, ui ) {
-		if (designMode == false) {
+		if (designMode == true) {
 			$("#" + graphBlockId + "-toolbox").css("display", "inline");
 		}
 	});
+
 
 	// Swith graphblock font on hover
 	$("#" + graphBlockId + "-toolbox").find(".toolbox-bottombar").attr("id", graphBlockId + "-toolbox-bottombar");
@@ -437,23 +493,17 @@ function isUrl(s) {
 
 function shortcutKeys() {
 	$(document).bind('keydown', 'ctrl+d', function(){
-		if (designMode === true) {
-			$(".toolbox").toggle();
-			$(".btn-delGraphBlock").toggle();
+		if (designMode == true) {
+			$(".toolbox").css("display", "none");
 			designMode = false;
  		}
 		else {
-			$(".toolbox").toggle();
-			$(".btn-delGraphBlock").toggle();
+			$(".toolbox").css("display", "inline");
 			designMode = true;	
 		}
 		return false;
 	 });
 	$(document).bind('keydown', 'ctrl+g', function(){ newGraphBlock(); return false; });
-
-	$(document).bind('keydown', 'ctrl+n', function(){ addNewTab(); return false });
-
-	$(document).bind('keydown', 'ctrl+s', function(){ saveToStorage(); return false });
 }
 
 function importGoogleFont(url) {
@@ -465,7 +515,7 @@ function importGoogleFont(url) {
 }
 
 function saveToStorage() {
-	$("#saveSpinner").css("display", "inline-block");
+	$("#icon-save").removeClass("fa-floppy-o").addClass("fa-cog fa-spin");
 	for (var i = 1; i < tabCounter; i++ ) {
 		localStorage.setItem("workbench-" + i, $("#workbench-" + i).html());
 	}
@@ -477,7 +527,7 @@ function saveToStorage() {
 			localStorage.setItem("googleFontURLs", JSON.stringify(googleFontURLs));
 		}
 	}
-	setTimeout(function(){ $("#saveSpinner").css("display", "none") },900);
+	setTimeout(function(){ $("#icon-save").removeClass("fa-cog fa-spin").addClass("fa-floppy-o") },900);
 }
 
 function loadFromStorage() {
@@ -542,6 +592,13 @@ function loadFromStorage() {
 	setBaseFontSize(localStorage.getItem("baseFontSize"));
 	$("#baseFontSize").val(baseFontSize);
 
+}
+
+function clearStorage() {
+	$("#icon-clear").removeClass("fa-trash-o").addClass("fa-cog fa-spin");
+	localStorage.clear();
+    $(".workbench").html("");
+    setTimeout(function(){ $("#icon-clear").removeClass("fa-cog fa-spin").addClass("fa-trash-o") },600);
 }
 
 var customFonts = [];

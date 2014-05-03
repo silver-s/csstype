@@ -21,6 +21,7 @@ body {
 	background-color: #fff!important;
 	border-radius: 0px;
 	font-size: 10px;
+	
 }
 
 #header {
@@ -56,34 +57,42 @@ body {
 	float: left;
 }
 
-#btn-save {
+#btn-clear {
+	margin-left: 2%;
+}
+
+.btn-storageControl {
 	float:left;
 	font-size: 110%;
 	margin-top: 36px;
 	background-color: #2B8B5F;
 	border: thin solid #13694E;
 	height: 30px;
-	width: 6.2em;
-	color: #ebeeed;
+	width: 6.5em;
+	color: #f0f2f1;
 	font-family: "Arial Black", "Arial Bold", Gadget, sans-serif;
+	font-weight: 900;
+	padding: 0;
 }
 
-#saveSpinner {
-	float:left;
-	font-size: 120%;
-    margin-left: 9px;
-    margin-top: 42px;
-    display: none;
-}
 
-#btn-save:hover {
+.btn-storageControl:hover {
 	background-color: #29845a;
 	cursor: pointer;
 }
 
+.fa-trash-o {
+	font-size: 130%;
+	margin-right: 2px;
+}
+
 .fa-floppy-o {
-	color: #000;
-	font-size: 120%;
+	font-size: 130%;
+	margin-right: 2px;
+}
+
+.fa-cog {
+	font-size: 130%;
 	margin-right: 2px;
 }
 
@@ -98,7 +107,8 @@ body {
 
 #header-text-right p {
 	float: right;
-	margin-top: 12px;
+	margin-top: 20px;
+	line-height: 21px;
 }
 
 #button-bar {
@@ -133,6 +143,7 @@ body {
 
 .graphBlock {
 	position: absolute;
+	width: 35%;
 }
 
 .graphBlock-content {
@@ -142,8 +153,8 @@ body {
 	font-family: Verdana, Geneva, sans-serif; 
 	font-size: 1.6em;
 	line-height: 2em;
-	padding: 0px 8px;
-	width: 550px;
+	padding: 0em 0.8em;
+	width: 100%;
 	border-style: solid;
 	border-color: #000;
 	border-width: 1px;
@@ -181,11 +192,22 @@ body {
 }
 
 .toolbox {
-    font-size: 11px;
-    left: 576px;
+	font-size: 11px;
+    margin-left: 6px;
     position: absolute;
-    width: 259px;
     line-height: 16px;
+    width: 244px;
+}
+
+.toolbox-topbar {
+	display: inline-block;
+	margin-bottom: 1px;
+	width: 244px;
+}
+
+.toolbox-bottombar {
+	clear:both;
+	display: inline-block;
 }
 
 .hidden {
@@ -218,23 +240,53 @@ body {
 	border-style: solid;
 	border-width: 1px;
 	border-color: #000;
-	height: 1.7em;
-	width: 3.5em;
+	height: 18px;
+	width: 36px;
 	float: left;
 	margin-right: 4px;
+	line-height: 10px;
+	padding: 1px!important;
+}
+
+.gb-padding {
+	background-color: #fff;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #000;
+	height: 1.5em;
+	width: 3.3em;
+	line-height: 10px;
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+.gb-lspacing {
+	width: 4em;
+}
+
+.gb-width {
+	background-color: #fff;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #000;
+	height: 1.5em;
+	width: 3.3em;
+	margin-right: 1px;
 	line-height: 10px;
 }
 
 .btn-fontstyle {
 	border-style: solid;
 	border-width: 1px;
-	height: 2em;
-	width: 2em;
+	height: 22px;
+	width: 21px;
 	border-color: #000;
 	cursor: pointer;
 	float: left;
 	margin-right: 4px;
 	line-height: 10px;
+	text-align: center;
+	padding: 0px;
 }
 
 .spectrum-font {
@@ -244,13 +296,42 @@ body {
 
 .btn-css {
 	float:left;
+	height: 22px;
+	width: 25px;
 	background-color: #fff;
-	height: 2em;
 	cursor: pointer;
-	width: 2.3em;
 	border: 1px solid #000;
 	text-align: center;
-	padding: 0;
+	margin-left: 4px;
+}
+
+.btn-additional {
+	float: left;
+	height: 22px;
+	width: 25px;
+	font-size: 13px!important;
+	background-color: #fff;
+	border: 1px solid #000;
+	cursor: pointer;
+	color: #555555;
+}
+
+.btn-newFont {
+	cursor: pointer;
+	height: 22px;
+	width: 25px;
+	border: 1px solid #000;
+	text-align: center;
+	font-size: 13px!important;
+	background-color: #fff;
+	color: #555555;
+	float: left;
+	margin-left: 4px;
+}
+
+.chosen-container {
+	width: 186px!important;
+	float: left;
 }
 
 .chosen-single {
@@ -258,22 +339,34 @@ body {
 }
 
 .css-code {
-	position: absolute;
-    margin-top: 6px;
+	position: relative;
     background-color: #FFF; 
     color: #000;
-    width: 248px;
     border: 1px solid #000;
     padding: 4px;
+    display: block;
+    margin-top: 2px;
+}
+
+.toolbox-additional {
+	position: relative;
+    background-color: #FFF; 
+    color: #000;
+    border: 1px solid #000;
+    padding: 4px 0px 4px 4px;
+}
+
+.gb-padding-container {
+	margin-bottom: 7px;
 }
 
 .btn-delGraphBlock {
 	color: #ae1414;
 	cursor: pointer;
 	font-family: "Arial Black", "Arial Bold", Gadget, sans-serif;
-	font-size: 14px;
+	font-size: 15px;
 	position: absolute;
-	left: 263px;
+	margin-left: 3px;
 }
 
 #ul-tabs {
@@ -307,18 +400,8 @@ body {
 
 #header-baseFontSize {
 	float:right;
-	margin-top: 20px;
+	margin-top: 12px;
 	margin-right: 14%;
-}
-
-.btn-newFont {
-	height: 2.3em;
-	cursor: pointer;
-	width: 2.5em;
-	border: 1px solid #000;
-	text-align: center;
-	font-size: 10px!important;
-	margin-left: 1px;
 }
 
 #newFontOverlay {
@@ -342,6 +425,10 @@ body {
 	-moz-opacity: 1;
     opacity: 1;
     filter: alpha(opacity=100);
+}
+
+#newFontContent a {
+	color: #2B8B5F;
 }
 
 #newFontContent p {
@@ -384,4 +471,17 @@ body {
 	width: 14%;
 	margin-left: 1%;
 	font-size: 0.9em;
+}
+
+.gb-lspacing-container {
+	letter-spacing: 4px;
+}
+
+.sp-preview {
+	width:22px!important;
+	height: 20px!important;
+}
+
+.sp-replacer {
+	margin-bottom: 0px!important;
 }

@@ -20,11 +20,11 @@
 	<div id="container">
 		<div id="header">
 			<span id="header-save">
-				<button type="button" id="btn-save" onclick="saveToStorage()"><i class="fa fa-floppy-o"></i> SAVE </button>
-				<i id="saveSpinner" class="fa fa-spinner fa-spin"></i>
+				<button type="button" id="btn-save" class="btn-storageControl" onclick="saveToStorage()"><i id="icon-save" class="fa fa-floppy-o"></i> SAVE </button>
+				<button type="button" id="btn-clear" class="btn-storageControl" onclick="clearStorage()"><i id="icon-clear" class="fa fa-trash-o"></i> CLEAR </button>
 			</span>
 			<div id="header-text-right">
-				<p>Ctrl+N - Create new worksheet<br>Ctrl+G - Add new Graphic block<br>Ctrl+D - Toggle design mode<br>Ctrl+S - Save progress</p>
+				<p>Ctrl+D - Toggle design mode<br>Ctrl+G - Add new Graphic block</p>
 				<div id="header-baseFontSize">
 					<p id="baseFontSizeUnits">Base font size: <input type='number' id="baseFontSize" min="1" step="1" value="10" /> px</p>
 				</div>
@@ -57,19 +57,26 @@
 	</div>
 	<div id="toolboxTemplate" class="hidden">
 		<div class="toolbox-topbar">
-			<input type='text' class="gb-font-color" />
+			<input type='text' class="gb-font-color">
 			<button type='button' class="btn-bold btn-fontstyle"><i class="fa fa-bold"></i></button>
 			<button type='button' class="btn-italic btn-fontstyle"><i class="fa fa-italic"></i></button>
 			<button type='button' class="btn-underline btn-fontstyle"><i class="fa fa-underline"></i></button>
-			<input type='number' class="gb-num-input" id="gb-font-size" min="0.1" step="0.1" value="1.6" title="Font size (em)" />
-			<input type='number' class="gb-num-input" id="gb-line-height" min="0.1" step="0.1" value="2" title="Line height (em)" />
-			<input type='text' class="gb-bg-color" />
-			<button type='button' class="btn-css" title="Show CSS code"><i class="fa fa-code"></i></button>
+			<input type='number' class="gb-num-input" id="gb-font-size" min="0.1" step="0.1" value="1.6" title="Font size (em)">
+			<input type='number' class="gb-num-input" id="gb-line-height" min="0.1" step="0.1" value="2" title="Line height (em)">
+			<input type='text' class="gb-bg-color">
+			<button type='button' class="btn-additional" title="Show additional settings"><i class="fa fa-wrench"></i></button>
 			<span class="btn-delGraphBlock" title="Delete graphblock"><i class="fa fa-times"></i></span>
 		</div>
 		<div class="toolbox-bottombar">
 			<select name="font" class="select-font" id="select-font-hidden"></select>
 			<button type='button' class="btn-newFont" title="Add a new font"><i class="fa fa-plus"></i></button>
+			<button type='button' class="btn-css" title="Show CSS code"><i class="fa fa-code"></i></button>
+		</div>
+		<div class="toolbox-additional hidden">
+			<div class="gb-padding-container">
+				Padding <input type='number' id="gb-padding-top" class="gb-padding" title="top" value="0" min="0" step="0.1"> <input type='number' id="gb-padding-right" class="gb-padding" title="right" value="0.8" min="0" step="0.1"> <input type='number' id="gb-padding-bottom" class="gb-padding" title="bottom" value="0" min="0" step="0.1"> <input type='number' id="gb-padding-left" class="gb-padding" title="left" value="0.8" min="0" step="0.1"> em </div>
+			<div class="gb-padding-container">Graphblock width <input type='number' id="gb-width" class="gb-width" value="35" min="0" step="1"> % </div>
+			<div class="gb-lspacing-container">Letter spacing <input type='number' id="gb-lspacing" class="gb-padding gb-lspacing" value="0" step="0.05"> em </div>
 		</div>
 		<span id="cssCodeTemplate" class="css-code hidden" style="display: none;"></span>
 	</div>
@@ -79,7 +86,7 @@
 				<div id="header-newFont">
 					<h1>Add new font</h1>
 				</div>
-				<p>Font family separated by commas or link to a Google font:</p>
+				<p>Font family separated by commas or link to a <a href="https://www.google.com/fonts">Google font</a>:</p>
 				<input id="input-font" type="text" name="fontName"><br>
 				<button id="newFont-add" class="newFont-control">Add</button>
 				<button id="newFont-cancel" class="newFont-control">Cancel</button>

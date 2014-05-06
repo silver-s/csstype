@@ -109,7 +109,7 @@ var tabs = $( "#workarea" ).tabs({
 
 function addNewTab() {
 	var id = "workbench-" + tabCounter,
-	li = "<li><a href='#" + id + "'>" + tabCounter + "</a></li>";
+	li = "<li id=" + id + "-tab ><a href='#" + id + "'>" + tabCounter + "</a></li>";
 	$("#li-copyTab").before($(li));
 	tabs.append( "<div id='" + id + "' class='workbench'></div>" );
 	tabs.tabs( "refresh" );
@@ -121,7 +121,7 @@ function addNewTab() {
 
 function copyCurrentTab() {
 	var id = "workbench-" + tabCounter,
-	li = "<li><a href='#" + id + "'>" + tabCounter + "</a></li>";
+	li = "<li id=" + id + "-tab ><a href='#" + id + "'>" + tabCounter + "</a></li>";
 	$("#li-copyTab").before($(li));
 	tabs.append( "<div id='" + id + "' class='workbench'></div>" );
 	tabs.tabs( "refresh" );
@@ -140,8 +140,8 @@ function copyCurrentTab() {
 		graphBlockCounter++;
 	});
 
-	$( "#workarea" ).tabs( "option", "active", tabCounter-1);
 	tabGbCounter.push(tabGbCounter[currentTab.substr(10,currentTab.length)-1]);
+	$( "#workarea" ).tabs( "option", "active", tabCounter-1);
 	tabCounter++;
 }
 
@@ -609,7 +609,13 @@ function loadFromStorage() {
 function clearStorage() {
 	$("#icon-clear").removeClass("fa-trash-o").addClass("fa-cog fa-spin");
 	localStorage.clear();
-    $(".workbench").html("");
+	for (var i=tabCounter; i>1; i--) {
+		$("#workbench-" + i).remove();
+		$("#workbench-" + i + "-tab").remove();
+	}
+	tabs.tabs("refresh");
+    $("#workbench-1").html("");
+    tabGbCounter = [0];
     setTimeout(function(){ $("#icon-clear").removeClass("fa-cog fa-spin").addClass("fa-trash-o") },600);
 }
 

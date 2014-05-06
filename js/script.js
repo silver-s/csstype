@@ -19,7 +19,7 @@ $( document ).ready(function() {
 });
 
 var graphBlockCounter = 1;
-var tabGbCounter = [0]; // Count graphblocks per tab for positioning
+var tabGbCounter = [0]; // Count the number of graphblocks in stack (per tab) for new graphblock positioning
 var zindexCounter = 0;
 var baseFontSize = 10;
 
@@ -78,8 +78,7 @@ function makeDraggable(tabId) {
 	}
 	$( "." + tabId + "-blocks" ).draggable({ 
 		containment: "#" + tabId, 
-		scroll: false, 
-		/*stack: ".graphBlock",*/ 
+		scroll: false,  
 		handle: ".graphBlock-handle"
 	});
 }
@@ -123,15 +122,27 @@ function addNewTab() {
 function copyCurrentTab() {
 	var id = "workbench-" + tabCounter,
 	li = "<li><a href='#" + id + "'>" + tabCounter + "</a></li>";
-	tabs.find( ".ui-tabs-nav" ).append( li );
+	$("#li-copyTab").before($(li));
 	tabs.append( "<div id='" + id + "' class='workbench'></div>" );
 	tabs.tabs( "refresh" );
-	tabCounter++;
-	$('#' + id).html($('#' + currentTab).html());
+	$("#" + id).html($('#' + currentTab).html());
 	$( "div#" + id ).children().removeClass( currentTab + "-blocks"  ).addClass(id + "-blocks");
-	
 	makeDraggable(id);
-	$( "#workarea" ).tabs( "option", "active", tabCounter);
+	setWorkbenchHeight();
+	
+	$("#"+ id).children().each(	function() {
+		var graphBlockId = "graphBlock-" + graphBlockCounter;
+		var oldId = $(this).attr("id");
+		$(this).attr("id", graphBlockId);
+		$("#" + graphBlockId + " > #" + oldId + "-content").attr("id", graphBlockId + "-content");
+		$("#" + graphBlockId + " > #" + oldId + "-toolbox").remove();
+		setEventHandlers(graphBlockId);
+		graphBlockCounter++;
+	});
+
+	$( "#workarea" ).tabs( "option", "active", tabCounter-1);
+	tabGbCounter.push(tabGbCounter[currentTab.substr(10,currentTab.length)-1]);
+	tabCounter++;
 }
 
 
@@ -447,8 +458,9 @@ function setEventHandlers(graphBlockId) {
 	// Hide toolbar when dragging
 	$("#" + graphBlockId).on( "dragstart", function( event, ui ) {
 		$("#" + graphBlockId + "-toolbox").css("display", "none");
-		if (tabGbCounter > 0) {
-			tabGbCounter[currentTabNr-1]--;
+		var currentTabNr = currentTab.substr(10,currentTab.length)-1;
+		if (tabGbCounter[currentTabNr] > 0) {
+			tabGbCounter[currentTabNr]--;
 		}
 	});
 

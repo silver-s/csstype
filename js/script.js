@@ -125,20 +125,23 @@ function copyCurrentTab() {
 	$("#li-copyTab").before($(li));
 	tabs.append( "<div id='" + id + "' class='workbench'></div>" );
 	tabs.tabs( "refresh" );
+	$( "#initial-instructions" ).remove();
 	$("#" + id).html($('#' + currentTab).html());
 	$( "div#" + id ).children().removeClass( currentTab + "-blocks"  ).addClass(id + "-blocks");
 	makeDraggable(id);
 	setWorkbenchHeight();
 	
-	$("#"+ id).children().each(	function() {
-		var graphBlockId = "graphBlock-" + graphBlockCounter;
-		var oldId = $(this).attr("id");
-		$(this).attr("id", graphBlockId);
-		$("#" + graphBlockId + " > #" + oldId + "-content").attr("id", graphBlockId + "-content");
-		$("#" + graphBlockId + " > #" + oldId + "-toolbox").remove();
-		setEventHandlers(graphBlockId);
-		graphBlockCounter++;
-	});
+	if ($("#" + id).children().length > 0 ) {
+		$("#"+ id).children().each(	function() {
+			var graphBlockId = "graphBlock-" + graphBlockCounter;
+			var oldId = $(this).attr("id");
+			$(this).attr("id", graphBlockId);
+			$("#" + graphBlockId + " > #" + oldId + "-content").attr("id", graphBlockId + "-content");
+			$("#" + graphBlockId + " > #" + oldId + "-toolbox").remove();
+			setEventHandlers(graphBlockId);
+			graphBlockCounter++;
+		});
+	}
 
 	tabGbCounter.push(tabGbCounter[currentTab.substr(10,currentTab.length)-1]);
 	$( "#workarea" ).tabs( "option", "active", tabCounter-1);
@@ -322,6 +325,9 @@ function setEventHandlers(graphBlockId) {
 	// GraphBlock delete button
 	$("#" + graphBlockId + "-delBtn").click(function() {
 		$("#" + graphBlockId).remove();
+
+		var currentTabNr = currentTab.substr(10,currentTab.length)-1;
+		if (tabGbCounter[currentTabNr] > 0) { tabGbCounter[currentTabNr]--; }
 	});
 
 
@@ -607,16 +613,18 @@ function loadFromStorage() {
 }
 
 function clearStorage() {
-	$("#icon-clear").removeClass("fa-trash-o").addClass("fa-cog fa-spin");
-	localStorage.clear();
-	for (var i=tabCounter; i>1; i--) {
-		$("#workbench-" + i).remove();
-		$("#workbench-" + i + "-tab").remove();
-	}
-	tabs.tabs("refresh");
-    $("#workbench-1").html("");
-    tabGbCounter = [0];
-    setTimeout(function(){ $("#icon-clear").removeClass("fa-cog fa-spin").addClass("fa-trash-o") },600);
+	if (confirm("This will clear all changes including any saved content. Continue?")) {
+		$("#icon-clear").removeClass("fa-trash-o").addClass("fa-cog fa-spin");
+		localStorage.clear();
+		for (var i=tabCounter; i>1; i--) {
+			$("#workbench-" + i).remove();
+			$("#workbench-" + i + "-tab").remove();
+		}
+		tabs.tabs("refresh");
+	    $("#workbench-1").html("");
+	    tabGbCounter = [0];
+	    setTimeout(function(){ $("#icon-clear").removeClass("fa-cog fa-spin").addClass("fa-trash-o") },600);
+    }
 }
 
 var customFonts = [];

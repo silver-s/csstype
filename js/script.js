@@ -159,7 +159,9 @@ function updateCssCodeBox(graphBlockId) {
 		"font-style: " + $("#" + graphBlockId + "-content").css("font-style") + ";<br>" + 
 		"font-weight: " + $("#" + graphBlockId + "-content").css("font-weight") + ";<br>" + 
 		"text-decoration: " + $("#" + graphBlockId + "-content").css("text-decoration") + ";<br>" + 
+		"text-align: " + $("#" + graphBlockId + "-content").css("text-align") + ";<br>" + 
 		"line-height: " + $("#" + graphBlockId + "-lineHeight").val() + "em;<br>" + 
+		"word-spacing: " + $("#" + graphBlockId + "-wordspacing").val() + "em;<br>" + 
 		"letter-spacing: " + $("#" + graphBlockId + "-lspacing").val() + "em;<br>" + 
 		"width: " + $("#" + graphBlockId + "-width").val() + "%;<br>" +
 		"padding: " + $("#" + graphBlockId + "-padding-top").val() + "em " + $("#" + graphBlockId + "-padding-right").val() + "em " + $("#" + graphBlockId + "-padding-bottom").val() + "em " + $("#" + graphBlockId + "-padding-left").val() +"em;<br>" +
@@ -444,6 +446,43 @@ function setEventHandlers(graphBlockId) {
 		$("#" + graphBlockId + "-content").css("letter-spacing", $(this).val() + "em");
 		updateCssCodeBox(graphBlockId);
 	});
+
+	$("#" + graphBlockId + "-toolbox").find("#gb-wordspacing").attr("id", graphBlockId + "-wordspacing");
+	var graphWordSpacing = document.getElementById(graphBlockId + "-content").style.wordSpacing;
+	if (graphWordSpacing != "") { $("#" + graphBlockId + "-wordspacing").val(graphWordSpacing.substring(0, graphWordSpacing.length-2)); }
+	$("#" + graphBlockId + "-wordspacing" ).change(function() {
+		$("#" + graphBlockId + "-content").css("word-spacing", $(this).val() + "em");
+		updateCssCodeBox(graphBlockId);
+	});
+
+
+	$("#" + graphBlockId + "-toolbox").find(".btn-align-left").attr("id", graphBlockId + "-alignLeft");
+	$("#" + graphBlockId + "-alignLeft" ).click(function() {
+		$("#" + graphBlockId + "-content").css("text-align", "left");
+		updateCssCodeBox(graphBlockId);
+	});
+
+
+	$("#" + graphBlockId + "-toolbox").find(".btn-align-center").attr("id", graphBlockId + "-alignCenter");
+	$("#" + graphBlockId + "-alignCenter" ).click(function() {
+		$("#" + graphBlockId + "-content").css("text-align", "center");
+		updateCssCodeBox(graphBlockId);
+	});
+
+
+	$("#" + graphBlockId + "-toolbox").find(".btn-align-right").attr("id", graphBlockId + "-alignRight");
+	$("#" + graphBlockId + "-alignRight" ).click(function() {
+		$("#" + graphBlockId + "-content").css("text-align", "right");
+		updateCssCodeBox(graphBlockId);
+	});
+
+
+	$("#" + graphBlockId + "-toolbox").find(".btn-align-justify").attr("id", graphBlockId + "-alignJustify");
+	$("#" + graphBlockId + "-alignJustify" ).click(function() {
+		$("#" + graphBlockId + "-content").css("text-align", "justify");
+		updateCssCodeBox(graphBlockId);
+	});
+
 
 	$("#" + graphBlockId + "-toolbox").find(".btn-additional").attr("id", graphBlockId + "-btnAdditional");
 	$("#" + graphBlockId + "-btnAdditional" ).click(function() {

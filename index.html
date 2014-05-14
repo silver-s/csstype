@@ -73,10 +73,17 @@
 			<button type='button' class="btn-css" title="Show CSS code"><i class="fa fa-code"></i></button>
 		</div>
 		<div class="toolbox-additional hidden">
+			<div class="gb-align-container">Alignment 
+				<button type="button" class="btn-align-justify btn-align" title="Justified"><i class="fa fa-align-justify"></i></button>
+				<button type="button" class="btn-align-right btn-align" title="Align right"><i class="fa fa-align-right"></i></button>
+				<button type="button" class="btn-align-center btn-align" title="Align center"><i class="fa fa-align-center"></i></button>
+				<button type="button" class="btn-align-left btn-align" title="Align left"><i class="fa fa-align-left"></i></button>				
+			</div>
 			<div class="gb-padding-container">
-				Padding <input type='number' id="gb-padding-top" class="gb-padding" title="top" value="0" min="0" step="0.1"> <input type='number' id="gb-padding-right" class="gb-padding" title="right" value="0.8" min="0" step="0.1"> <input type='number' id="gb-padding-bottom" class="gb-padding" title="bottom" value="0" min="0" step="0.1"> <input type='number' id="gb-padding-left" class="gb-padding" title="left" value="0.8" min="0" step="0.1"> em </div>
+				Padding (em) <input type='number' id="gb-padding-top" class="gb-padding" title="top" value="0" min="0" step="0.1"> <input type='number' id="gb-padding-right" class="gb-padding" title="right" value="0.8" min="0" step="0.1"> <input type='number' id="gb-padding-bottom" class="gb-padding" title="bottom" value="0" min="0" step="0.1"> <input type='number' id="gb-padding-left" class="gb-padding" title="left" value="0.8" min="0" step="0.1"></div>
 			<div class="gb-padding-container">Graphblock width <input type='number' id="gb-width" class="gb-width" value="35" min="0" step="1"> % </div>
-			<div class="gb-lspacing-container">Letter spacing <input type='number' id="gb-lspacing" class="gb-padding gb-lspacing" value="0" step="0.05"> em </div>
+			<div class="gb-wordspacing-container">Word spacing <input type='number' id="gb-wordspacing" class="gb-padding gb-wordspacing" value="0" step="0.05"> em</div>
+			<div class="gb-lspacing-container">Letter spacing <input type='number' id="gb-lspacing" class="gb-padding gb-lspacing" value="0" step="0.05"> em</div>
 		</div>
 		<span id="cssCodeTemplate" class="css-code hidden" style="display: none;"></span>
 	</div>

@@ -1,5 +1,4 @@
-body { 
-	/*font-size: 62.5%;  /* 16px × 62.5% = 10px */ 
+body {  
 	margin-left: 0px;
 	margin-right: 0px;
 	margin-top: 0px;
@@ -255,14 +254,20 @@ body {
 	border-width: 1px;
 	border-color: #000;
 	height: 1.5em;
-	width: 3.3em;
+	width: 3.091em;
 	line-height: 10px;
 	padding-left: 0px;
 	padding-right: 0px;
 }
 
+.gb-wordspacing {
+	width: 4em;
+	margin-left: 22px;
+}
+
 .gb-lspacing {
 	width: 4em;
+	margin-left: 19px;
 }
 
 .gb-width {
@@ -271,8 +276,10 @@ body {
 	border-width: 1px;
 	border-color: #000;
 	height: 1.5em;
-	width: 3.3em;
+	width: 4em;
 	margin-right: 1px;
+	padding-left: 0;
+	padding-right: 0;
 	line-height: 10px;
 }
 
@@ -332,6 +339,21 @@ body {
 	margin-left: 4px;
 }
 
+.btn-align {
+	background-color: #fff;
+	cursor:pointer;
+	border: 1px solid;
+	font-size:14px!important;
+	float: right;
+	margin-left: 4px;
+	width: 36px;
+	height: 21px;
+}
+
+.btn-align-justify {
+	margin-right: 1px;
+}
+
 .chosen-container {
 	width: 186px!important;
 	float: left;
@@ -349,6 +371,7 @@ body {
     padding: 4px;
     display: block;
     margin-top: 2px;
+    word-wrap: break-word;
 }
 
 .toolbox-additional {
@@ -360,6 +383,7 @@ body {
 }
 
 .gb-padding-container {
+	margin-top: 8px;
 	margin-bottom: 7px;
 }
 
@@ -389,6 +413,22 @@ body {
 
 .underline {
 	text-decoration: underline!important;
+}
+
+.align-left {
+	text-align: left;
+}
+
+.align-center {
+	text-align: center;
+}
+
+.align-right {
+	text-align: right;
+}
+
+.align-justify {
+	text-align: justify;
 }
 
 #baseFontSizeUnits {
@@ -476,8 +516,12 @@ body {
 	font-size: 0.9em;
 }
 
-.gb-lspacing-container {
-	letter-spacing: 4px;
+.gb-wordspacing-container {
+	margin-bottom: 7px;
+}
+
+.gb-align-container {
+	margin-bottom:7px;
 }
 
 .sp-preview {
